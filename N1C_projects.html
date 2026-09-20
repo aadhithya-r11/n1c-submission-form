@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N1C Gene Registry</title>
+
+    <!-- General Description -->
+    <meta name="description" content="The N1C Gene Registry is a searchable database of therapeutic approaches for rare genetic variants, curated by the N=1 Collaborative." />
+
+    <!-- Social Sharing: Open Graph (used by Facebook, LinkedIn, etc.) -->
+    <meta property="og:title" content="N1C Gene Registry" />
+    <meta property="og:description" content="Explore therapeutic projects for rare genetic conditions. Curated by the N=1 Collaborative." />
+    <meta property="og:image" content="https://n1collaborative.github.io/Gene_Registry/N1C_logo.jpg" />
+    <meta property="og:url" content="https://n1collaborative.github.io/Gene_Registry/" />
+    <meta property="og:type" content="website" />
+
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="N1C_projects.css">
+    
+    <script>
+        let tableData = []; // Store fetched data globally.
+
+        async function loadTable(tableName, retry = false) {
+            try {
+                document.getElementById("loading").style.display = "block";
+
+                const response = await fetch("https://gene-registry.onrender.com/api/data?table=N1C_projects");
+                if (!response.ok) throw new Error("Network response was not ok");
+
+                tableData = await response.json();
+                displayTable(tableData);
+
+        } catch (error) {
+            console.error("Error loading data:", error);
+
+            if (!retry) {
+                console.log("Retrying in 3 seconds...");
+                setTimeout(() => loadTable(tableName, true), 3000);
+                return;
+            }
+
+            document.getElementById("data-table").innerHTML = "<p>Error loading data.</p>";
+
+        } finally {
+            document.getElementById("loading").style.display = "none";
+        }
+    }
+
+       
+function displayTable(data, expandAll = false) {
+    let table = document.getElementById("data-table");
+    table.innerHTML = ""; // Clear the table
+
+    if (data.length === 0) {
+        table.innerHTML = "<p>No data found.</p>";
+        return;
+    }
+
+    // 🔥 NEW: Filter unwanted statuses
+    const excludedStatuses = ["Currently Not Pursued for Development", "In Consideration for Development"]; // Add any more statuses you want to exclude
+    data = data.filter(item => !excludedStatuses.includes(item["Status"]));
+    
+    // 🔍 Debug the data
+    console.log("First row keys:", Object.keys(data[0]));
+
+    // Define which columns to show in the overview table
+    let headers = ["Gene", "RefSeq Transcript", "Coding DNA change (c.)", "Predicted protein change (p.)", "Therapeutic Modality", "Status"];
+
+    // 🔍 Debug the headers you're trying to use
+    console.log("Headers being used:", headers);
+
+  const grouped = {};
+  data.forEach((item) => {
+    const gene = item["Gene"] || "";
+    const letter = gene.charAt(0).toUpperCase();
+    if (!grouped[letter]) {
+        grouped[letter] = [];
+    }
+    grouped[letter].push(item);
+});
+
+console.log("Grouped by gene letter:", grouped);
+
+    for (const letter of Object.keys(grouped).sort()) {
+
+    // ✅ Sort inside each group
+    grouped[letter].sort((a, b) => {
+        const geneA = a["Gene"] || "";
+        const geneB = b["Gene"] || "";
+
+        // 1. Sort alphabetically by Gene
+        const geneComparison = geneA.localeCompare(geneB);
+        if (geneComparison !== 0) return geneComparison;
+
+        // 2. If same Gene, sort by numeric value in c. classification
+        const cdnaA = a["Coding DNA change (c.)"] || "";
+        const cdnaB = b["Coding DNA change (c.)"] || "";
+
+        const numA = parseInt((cdnaA.match(/c\.(\d+)/) || [])[1] || 0);
+        const numB = parseInt((cdnaB.match(/c\.(\d+)/) || [])[1] || 0);
+
+        return numA - numB;
+    });
+
+    const section = document.createElement("details");
+    section.style.marginBottom = "20px";
+    if (expandAll) {
+        section.open = true;
+    }
+
+
+        const summary = document.createElement("summary");
+        summary.textContent = letter;
+        summary.style.fontSize = "20px";
+        summary.style.cursor = "pointer";
+        summary.style.fontWeight = "bold";
+        summary.style.color = "#D8443D";
+        section.appendChild(summary);
+
+          // Create table
+        const tableElement = document.createElement("table");
+        tableElement.style.width = "100%";
+        tableElement.style.marginTop = "10px";
+        tableElement.style.borderCollapse = "collapse";
+
+        // Header row
+        let headerRow = "<tr>";
+        headers.forEach(header => {
+            headerRow += `<th>${header}</th>`;
+        });
+        headerRow += "</tr>";
+
+        // Data rows
+        // Data rows
+       let bodyRows = "";
+
+        grouped[letter].forEach((item) => {
+            let row = `<tr onclick="viewEntry('${item["ID"]}')" style="cursor: pointer;">`;
+        
+            headers.forEach(header => {
+                const value = item[header] !== undefined ? item[header] : "N/A";
+        
+                if (header === "Coding DNA change (c.)") {
+                    row += `
+                        <td>
+                            <a
+                                href="entry.html?id=${item["ID"]}"
+                                class="registry-entry-link"
+                                onclick="event.stopPropagation();"
+                            >
+                                ${value}
+                            </a>
+                        </td>
+                    `;
+                } else {
+                    row += `<td>${value}</td>`;
+                }
+            });
+        
+            row += "</tr>";
+            bodyRows += row;
+        });
+
+        
+        tableElement.innerHTML = headerRow + bodyRows;
+        section.appendChild(tableElement);
+        table.appendChild(section);
+        }
+    }
+
+
+        function searchTable() {
+            let query = document.getElementById("search").value.toLowerCase();
+            let filteredData = tableData.filter(row =>
+                Object.values(row).some(value =>
+                    String(value).toLowerCase().includes(query)
+                )
+            );
+            displayTable(filteredData, true);
+        }
+
+        function viewEntry(id) {
+          window.location.href = `entry.html?id=${id}`;
+        }
+
+    function expandAll(expand) {
+      const sections = document.querySelectorAll("details");
+      sections.forEach(section => {
+        section.open = expand;
+      });
+    }
+        
+    </script>
+    
+</head>
+    
+<body onload="loadTable('N1C_projects')">
+ <header class="registry-header">
+  <div class="registry-header-inner">
+    <a href="index.html" class="registry-brand">
+      <img src="N1C_logo.jpg" alt="N1C Logo" class="registry-brand-logo">
+      <span>N1C Gene Registry</span>
+    </a>
+
+    <button class="menu-button" id="menuButton" aria-expanded="false" aria-controls="registryMenu">
+      Menu
+    </button>
+  </div>
+
+  <nav class="registry-menu" id="registryMenu">
+    <div class="registry-menu-inner">
+      <a href="N1C_projects.html" class="active">N-of-1 Projects</a>
+      <a href="Marketed_drugs.html">Marketed Genetic Therapies</a>
+      <a href="assessed_variants.html">Assessed Variants</a>
+      <a href="published_genetic_therapies.html">Published Genetic Therapies</a>
+      <a href="assessed_genes_diseases.html">Assessed Genes &amp; Diseases</a>
+      <a href="automated_assessment_tools.html">Automated Assessment Tools</a>
+      <a href="https://connections.n1collaborative.org/" target="_blank">
+          N1C Connections
+        </a>
+        
+        <a href="https://www.n1collaborative.org/" target="_blank">
+          N1C Website
+        </a>
+        <a href="info.html">Info</a>
+        <a href="patients.html" class="patient-link">For Patients</a>
+    </div>
+  </nav>
+</header>
+    
+    <h1>N-of-1 projects</h1>
+
+    <div style="max-width: 800px; margin: 40px auto 20px; padding: 20px; background-color: white; border-radius: 8px; text-align: center;">
+      <h2 style="color: #D8443D;">Submit Your Project</h2>
+      <p style="font-size: 16px; color: #333;">
+        Are you developing a therapeutic approach for a specific genetic variant?
+        Share your work with the N1C Gene Registry to increase visibility and collaboration.
+        Submit one project with the form below, or upload several at once using the template inside the form.
+        Please reach out to generegistry@n1collaborative.org for any questions related to the Gene Registry.
+      </p>
+      <a class="submit-button" href="submit.html">Submit Your Project</a>
+    </div>
+
+    <div style="max-width: 800px; margin: 40px auto 20px; padding: 20px; background-color: white; border-radius: 8px; text-align: center;">
+      <h2 style="color: #333;">Status Terminology</h2>
+      <p style="font-size: 16px; color: #333;">
+        <strong>Clinical Application:</strong>Clinical Application: The therapy has been fully developed and has been administered to at least one patient globally.<br>
+        <strong>Developed:</strong> The therapy has been pre-clinically developed but has not yet been clinically implemented.<br>
+        <strong>Under Development:</strong>The therapy is currently under development. This can be at different stages of the development, e.g., very early phases during which compounds are screened pre-clinically, animal testing, or at the manufacturing stage. For more information on the progress of one of the projects under development, please reach out to the respective contact person.
+      </p>
+    </div>
+
+     <div class="search-wrapper">
+      <input type="text" id="search" placeholder="Search..." />
+      <button class="search-button" onclick="searchTable()">Search</button>
+    </div>
+
+    <div style="text-align: center; margin-bottom: 20px;">
+      <button class="submit-button" onclick="expandAll(true)">Expand All</button>
+      <button class="submit-button" onclick="expandAll(false)">Collapse All</button>
+    </div>
+
+    <div class="loading-container">
+        <p id="loading">Loading table...</p>
+    </div>
+    
+    <table border="1" id="data-table"></table>
+
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'});" class="scroll-top">↑ Top</button>
+
+
+    <p class="registry-footer-text">
+        n-Lorem Portfolio: n-Lorem is an independent non-profit organisation developing antisense oligonucleotides.</br>
+        For more information on their ASOs, please reach out to n-Lorem directly: <a class="link" style="color: #D8443D" href="https://www.nlorem.org/patients/active-gene-programs/" target="_blank">https://www.nlorem.org/patients/active-gene-programs/</a>
+    </p>
+    
+    <p class="registry-footer-text">
+      Looking to integrate or access our data? Please reach out to generegistry@n1collaborative.org to inquire about our API.
+    </p>
+
+    <footer style="text-align: center; margin-top: 40px; font-size: 0.9em; color: #777;">
+      <p>© N=1 Collaborative</p>
+      <p id="last-updated">Last updated: ...</p>
+    </footer>
+
+    <script>
+        const now = new Date();
+        document.getElementById("last-updated").textContent = "Last updated: " + now.toLocaleString();
+    </script>
+
+    <script>
+const menuButton = document.getElementById("menuButton");
+const registryMenu = document.getElementById("registryMenu");
+
+menuButton.addEventListener("click", function () {
+  registryMenu.classList.toggle("open");
+});
+
+document.addEventListener("click", function (e) {
+  if (!registryMenu.contains(e.target) && e.target !== menuButton) {
+    registryMenu.classList.remove("open");
+  }
+});
+</script>
+    
+</body>
+</html>

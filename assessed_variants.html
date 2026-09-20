@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>N1C Assessed Variants</title>
+
+  <meta name="description" content="The N1C Assessed Variants Registry is a curated database of variant-level therapeutic assessments." />
+
+  <meta property="og:title" content="N1C Assessed Variants" />
+  <meta property="og:description" content="Explore assessed variants and their therapeutic eligibility, curated by the N=1 Collaborative." />
+  <meta property="og:image" content="https://n1collaborative.github.io/Gene_Registry/N1C_logo.jpg" />
+  <meta property="og:url" content="https://n1collaborative.github.io/Gene_Registry/assessed_variants.html" />
+  <meta property="og:type" content="website" />
+
+ <link rel="stylesheet" href="style.css">
+ <link rel="stylesheet" href="assessed_variants.css">
+
+<script>
+  let tableData = [];
+
+  async function loadTable(retry = false) {
+    try {
+      document.getElementById("loading").style.display = "block";
+
+      const response = await fetch("https://gene-registry.onrender.com/api/data?table=assessed_variants");
+      if (!response.ok) throw new Error("Network response was not ok");
+
+      tableData = await response.json();
+      displayTable(tableData);
+    } catch (error) {
+      console.error("Error loading data:", error);
+      if (!retry) {
+        setTimeout(() => loadTable(true), 3000);
+      } else {
+        document.getElementById("data-table").innerHTML = "<p>Error loading data.</p>";
+      }
+    } finally {
+      document.getElementById("loading").style.display = "none";
+    }
+  }
+
+  function getDiseaseName(item) {
+    return item["Disease"] || item["Condition/indication"] || item["Condition"] || item["Indication"] || "n/a";
+  }
+
+  function getVariantKey(item) {
+    const hgvs = (item["Genomic HGVS"] || "").trim();
+    if (hgvs) return `hgvs:${hgvs.toLowerCase()}`;
+
+    const gene = (item["Gene"] || "").trim().toLowerCase();
+    const transcript = (item["RefSeq Transcript"] || "").trim().toLowerCase();
+    const cdna = (item["Coding DNA change (c.)"] || "").trim().toLowerCase();
+    const protein = (item["Predicted protein change (p.)"] || "").trim().toLowerCase();
+
+    return `fallback:${gene}|${transcript}|${cdna}|${protein}`;
+  }
+
+  function getVariantLabel(item) {
+    const hgvs = (item["Genomic HGVS"] || "").trim();
+    if (hgvs) return hgvs;
+
+    const cdna = (item["Coding DNA change (c.)"] || "").trim();
+    const protein = (item["Predicted protein change (p.)"] || "").trim();
+
+    if (cdna && protein) return `${cdna} / ${protein}`;
+    if (cdna) return cdna;
+    if (protein) return protein;
+    return "n/a";
+  }
+
+  function displayTable(data, expandAll = false) {
+    const table = document.getElementById("data-table");
+    table.innerHTML = "";
+
+    if (!data || data.length === 0) {
+      table.innerHTML = "<p>No data found.</p>";
+      return;
+    }
+
+    const grouped = {};
+    data.forEach((item) => {
+      const key = getVariantKey(item);
+      if (!grouped[key]) grouped[key] = [];
+      grouped[key].push(item);
+    });
+
+    const groupedList = Object.entries(grouped).map(([key, items]) => {
+      const first = items[0];
+      return {
+        key,
+        items,
+        gene: first["Gene"] || "",
+        disease: getDiseaseName(first),
+        refseq: first["RefSeq Transcript"] || "n/a",
+        cdna: first["Coding DNA change (c.)"] || "n/a",
+        variantLabel: getVariantLabel(first)
+      };
+    });
+
+    groupedList.sort((a, b) => {
+      const geneA = a.gene.toLowerCase();
+      const geneB = b.gene.toLowerCase();
+      if (geneA < geneB) return -1;
+      if (geneA > geneB) return 1;
+
+      const diseaseA = a.disease.toLowerCase();
+      const diseaseB = b.disease.toLowerCase();
+      if (diseaseA < diseaseB) return -1;
+      if (diseaseA > diseaseB) return 1;
+
+      return a.variantLabel.localeCompare(b.variantLabel, undefined, { numeric: true });
+    });
+
+    const alphabetGroups = {};
+    groupedList.forEach((group) => {
+      const letter = (group.gene || group.variantLabel || "#").charAt(0).toUpperCase();
+      if (!alphabetGroups[letter]) alphabetGroups[letter] = [];
+      alphabetGroups[letter].push(group);
+    });
+
+    const headers = ["Gene", "Disease", "RefSeq Transcript", "Coding DNA change (c.)"];
+
+    Object.keys(alphabetGroups).sort().forEach((letter) => {
+      const section = document.createElement("details");
+      section.style.marginBottom = "20px";
+      if (expandAll) section.open = true;
+
+      const summary = document.createElement("summary");
+      summary.textContent = letter;
+      summary.style.fontSize = "20px";
+      summary.style.cursor = "pointer";
+      summary.style.fontWeight = "bold";
+      summary.style.color = "#D8443D";
+      section.appendChild(summary);
+
+      const tableElement = document.createElement("table");
+      tableElement.style.width = "100%";
+      tableElement.style.marginTop = "10px";
+      tableElement.style.borderCollapse = "collapse";
+
+      let headerRow = "<tr>";
+      headers.forEach(header => {
+        headerRow += `<th>${header}</th>`;
+      });
+      headerRow += "</tr>";
+
+      let bodyRows = "";
+      alphabetGroups[letter].forEach((group) => {
+        bodyRows += `
+          <tr onclick="viewEntry('${encodeURIComponent(group.key)}')" style="cursor: pointer;">
+            <td>${group.gene || "n/a"}</td>
+            <td>${group.disease}</td>
+            <td>${group.refseq}</td>
+            <td>${group.cdna}</td>
+          </tr>
+        `;
+      });
+
+      tableElement.innerHTML = headerRow + bodyRows;
+      section.appendChild(tableElement);
+      table.appendChild(section);
+    });
+  }
+
+  function searchTable() {
+    const query = document.getElementById("search").value.toLowerCase();
+    const filteredData = tableData.filter(row =>
+      Object.values(row).some(value =>
+        String(value).toLowerCase().includes(query)
+      )
+    );
+    displayTable(filteredData, true);
+  }
+
+  function viewEntry(variantKey) {
+    window.location.href = `variant_entry.html?variant=${variantKey}`;
+  }
+
+  function expandAll(expand) {
+    document.querySelectorAll("details").forEach(section => {
+      section.open = expand;
+    });
+  }
+</script>
+
+</head>
+  
+<body onload="loadTable()">
+  <header class="registry-header">
+  <div class="registry-header-inner">
+    <a href="index.html" class="registry-brand">
+      <img src="N1C_logo.jpg" alt="N1C Logo" class="registry-brand-logo">
+      <span>N1C Gene Registry</span>
+    </a>
+
+    <button class="menu-button" id="menuButton" aria-expanded="false" aria-controls="registryMenu">
+      Menu
+    </button>
+  </div>
+
+  <nav class="registry-menu" id="registryMenu">
+    <div class="registry-menu-inner">
+      <a href="N1C_projects.html">N-of-1 Projects</a>
+      <a href="Marketed_drugs.html">Marketed Genetic Therapies</a>
+      <a href="assessed_variants.html" class="active">Assessed Variants</a>
+      <a href="published_genetic_therapies.html">Published Genetic Therapies</a>
+      <a href="assessed_genes_diseases.html">Assessed Genes &amp; Diseases</a>
+      <a href="automated_assessment_tools.html">Automated Assessment Tools</a>      
+      <a href="https://connections.n1collaborative.org/" target="_blank">
+        N1C Connections
+      </a>      
+      <a href="https://www.n1collaborative.org/" target="_blank">
+        N1C Website
+      </a>
+      <a href="info.html">Info</a>
+      <a href="patients.html" class="patient-link">For Patients</a>    
+    </div>
+  </nav>
+</header>
+
+  <h1>N1C Assessed Variants</h1>
+
+  <div style="max-width: 800px; margin: 40px auto 20px; padding: 20px; background-color: white; border-radius: 8px; text-align: center;">
+      <h2 style="color: #D8443D;">Submit your assessments</h2>
+      <p style="font-size: 16px; color: #333;">
+        Alongside our dedicated team of trained volunteer assessors systematically assessing variants towards the eligibility
+        for different therapeutic modalities, we are now also accepting assessments from other teams and laboratories.
+        Submit one assessment with the form below, or upload several at once using the template inside the form.
+        Every assessment is shown with the name of the submitting group. Please reach out to generegistry@n1collaborative.org
+        for any questions.
+      </p>
+      <a class="submit-button" href="submit_variant.html">Submit a Variant Assessment</a>
+    </div>
+
+  <div class="search-wrapper">
+    <input type="text" id="search" placeholder="Search by gene, disease, variant, or HGVS...">
+    <button class="search-button" onclick="searchTable()">Search</button>
+  </div>
+  
+  <div style="text-align: center; margin-bottom: 20px;">
+      <button class="submit-button" onclick="expandAll(true)">Expand All</button>
+      <button class="submit-button" onclick="expandAll(false)">Collapse All</button>
+  </div>
+
+
+  <p id="loading">Loading table...</p>
+  <table id="data-table"></table>
+
+  <button onclick="window.scrollTo({top: 0, behavior: 'smooth'});" class="scroll-top">↑</button>
+
+  <footer>
+    <p>© N=1 Collaborative</p>
+    <p id="last-updated">Last updated: ...</p>
+  </footer>
+
+  <script>
+    document.getElementById("last-updated").textContent = "Last updated: " + new Date().toLocaleString();
+  </script>
+
+<script>
+const menuButton = document.getElementById("menuButton");
+const registryMenu = document.getElementById("registryMenu");
+
+menuButton.addEventListener("click", function () {
+  registryMenu.classList.toggle("open");
+});
+
+document.addEventListener("click", function (e) {
+  if (!registryMenu.contains(e.target) && e.target !== menuButton) {
+    registryMenu.classList.remove("open");
+  }
+});
+</script>
+  
+</body>
+</html>

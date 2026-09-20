@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Submit Your Project | N1C Gene Registry</title>
-<meta name="description" content="Submit an N-of-1 therapy development project to the N1C Gene Registry.">
+<meta name="description" content="Submit an N-of-1 therapy development project to the N1C Gene Registry, one at a time or from a file.">
 <link rel="stylesheet" href="submit.css">
 </head>
 <body>
@@ -19,18 +19,28 @@
 <div class="wrap">
 
   <div class="page-head">
-    <div class="eyebrow">Contribute</div>
+    <div class="eyebrow">N-of-1 Projects</div>
     <h1>Submit Your Project</h1>
     <p>Are you developing a therapeutic approach for a specific genetic variant? Share your work with the
-      N1C Gene Registry to increase visibility and collaboration. For questions, write to
+      N1C Gene Registry to increase visibility and collaboration. This form is for therapy development
+      projects; to submit a variant assessment, use the
+      <a href="submit_variant.html">assessed variants form</a>. For questions, write to
       <a href="mailto:generegistry@n1collaborative.org">generegistry@n1collaborative.org</a>.</p>
   </div>
 
+  <!-- ============ HOW WOULD YOU LIKE TO SUBMIT? ============ -->
+  <div class="mode" id="mode">
+    <button type="button" class="m on" id="mode-single" onclick="N1C.setMode('single')">
+      <span class="mt">One project</span><span class="md">Fill in the form step by step</span></button>
+    <button type="button" class="m" id="mode-bulk" onclick="N1C.setMode('bulk')">
+      <span class="mt">Several projects</span><span class="md">Upload a filled-in template file</span></button>
+  </div>
+
   <div class="steps" id="steps">
-    <button type="button" class="s on" data-i="0"><span class="n">1</span><span class="t">About you</span></button>
+    <button type="button" class="s on" data-i="0"><span class="n">1</span><span class="t">About you &amp; sharing</span></button>
     <button type="button" class="s" data-i="1"><span class="n">2</span><span class="t">Variant</span></button>
     <button type="button" class="s" data-i="2"><span class="n">3</span><span class="t">Therapy &amp; project</span></button>
-    <button type="button" class="s" data-i="3"><span class="n">4</span><span class="t">Sharing</span></button>
+    <button type="button" class="s" data-i="3"><span class="n">4</span><span class="t">Public contact</span></button>
     <button type="button" class="s" data-i="4"><span class="n">5</span><span class="t">Review &amp; submit</span></button>
   </div>
 
@@ -44,16 +54,24 @@
         <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off">
       </div>
 
-      <!-- ============ STEP 1 ============ -->
+      <!-- ============ STEP 1: ABOUT YOU AND SHARING ============ -->
       <section class="step" data-s="0">
-        <h2 class="sec-t">About you</h2>
-        <p class="sec-d">We use these details to contact you about your submission. Your own email is never
-          shown on the registry. There is a separate question on step 4 for the contact you want displayed.</p>
+        <h2 class="sec-t">About you and sharing</h2>
+        <p class="sec-d">First, tell us whether this project may be shown on the public registry. Your own
+          email is never shown; there is a separate question on step 4 for the contact you want displayed.</p>
+        <div class="fg" id="fg-consent">
+          <label>Do you agree for your project information to be displayed on the N1C Gene Registry,
+            to facilitate collaboration and communication with the public? <span class="req">*</span></label>
+          <div class="radio">
+            <label data-g="consent"><input type="radio" name="consent" value="Yes"> Yes, please share my submission on the public registry.</label>
+            <label data-g="consent"><input type="radio" name="consent" value="No"> No, please keep my submission on file within the N1C and do not share it publicly.</label>
+          </div>
+        </div>
         <div class="g2">
           <div class="fg" id="fg-email">
             <label for="f-email">Email <span class="req">*</span><span class="vis priv">Not public</span></label>
             <input id="f-email" type="email" autocomplete="email" placeholder="you@institution.eu">
-            <div class="hint">Where we send confirmation and update requests.</div>
+            <div class="hint">Where we contact you about this submission.</div>
           </div>
           <div class="fg" id="fg-name">
             <label for="f-name">Your name <span class="req">*</span><span class="vis priv">Not public</span></label>
@@ -73,7 +91,7 @@
         </div>
       </section>
 
-      <!-- ============ STEP 2 ============ -->
+      <!-- ============ STEP 2: VARIANT ============ -->
       <section class="step" data-s="1" hidden>
         <h2 class="sec-t">Variant information</h2>
         <p class="sec-d">Please give the transcript, coding change and protein change separately.
@@ -121,16 +139,17 @@
         </div>
       </section>
 
-      <!-- ============ STEP 3 ============ -->
+      <!-- ============ STEP 3: THERAPY AND PROJECT ============ -->
       <section class="step" data-s="2" hidden>
         <h2 class="sec-t">Therapy and project</h2>
         <p class="sec-d">What you are developing, and how far along it is.</p>
         <div class="fg" id="fg-strat">
           <label>What is your therapeutic strategy? <span class="req">*</span><span class="vis pub">Public</span></label>
           <div class="radio">
-            <label data-g="strat"><input type="radio" name="strat" value="Antisense oligonucleotide"> Antisense oligonucleotides (ASOs)</label>
+            <label data-g="strat"><input type="radio" name="strat" value="Antisense oligonucleotide"> Antisense oligonucleotide (ASO)</label>
             <label data-g="strat"><input type="radio" name="strat" value="Gene replacement"> Gene replacement</label>
-            <label data-g="strat"><input type="radio" name="strat" value="CRISPR/Cas9 gene editing"> CRISPR/Cas9 gene editing</label>
+            <label data-g="strat"><input type="radio" name="strat" value="Gene editing"> Gene editing (for example CRISPR/Cas9, base or prime editing)</label>
+            <label data-g="strat"><input type="radio" name="strat" value="RNA editing"> RNA editing</label>
             <label data-g="strat"><input type="radio" name="strat" value="Other"> Other</label>
           </div>
           <input id="f-strat-other" placeholder="Please specify" style="margin-top:9px;display:none">
@@ -142,7 +161,7 @@
             <option value="Under Development">Under development</option>
             <option value="Developed">Developed</option>
             <option value="Clinical Application">Clinical application (in use or on trial in patients)</option>
-            <option value="Currently not pursued">Currently not pursued, or development on pause</option>
+            <option value="Currently Not Pursued for Development">Currently not pursued, or development on pause</option>
           </select>
           <div class="hint">We periodically request status updates on projects in the registry.</div>
           <div class="intnote" id="intnote">This status is kept for N1C internal records and is not displayed
@@ -172,19 +191,14 @@
         </div>
       </section>
 
-      <!-- ============ STEP 4 ============ -->
+      <!-- ============ STEP 4: PUBLIC CONTACT ============ -->
       <section class="step" data-s="3" hidden>
-        <h2 class="sec-t">Sharing and public contact</h2>
-        <p class="sec-d">This decides whether your project appears on the public registry.</p>
-        <div class="fg" id="fg-consent">
-          <label>Do you agree for your project information to be displayed on the N1C Gene Registry,
-            to facilitate collaboration and communication with the public? <span class="req">*</span></label>
-          <div class="radio">
-            <label data-g="consent"><input type="radio" name="consent" value="Yes"> Yes, please share my submission on the public registry.</label>
-            <label data-g="consent"><input type="radio" name="consent" value="No"> No, please keep my submission on file within the N1C and do not share it publicly.</label>
-          </div>
-        </div>
-        <div class="fg" id="fg-pcontact">
+        <h2 class="sec-t">Public contact and comments</h2>
+        <p class="sec-d" id="pc-intro-yes">You chose to display this project. Please give the contact that researchers and
+          families should use to reach it.</p>
+        <p class="sec-d" id="pc-intro-no" style="display:none">You chose not to display this project, so no public contact is
+          needed. You can still leave a comment for the N1C team.</p>
+        <div class="fg" id="fg-pcontact" data-optional-when-hidden="yes">
           <label for="f-pcontact">Contact name and email to display publicly <span class="req">*</span><span class="vis pub">Public</span></label>
           <input id="f-pcontact" placeholder="Dr Jane Doe · j.doe@institution.eu">
           <div class="hint">The address researchers and families will use to reach the project.
@@ -196,18 +210,19 @@
         </div>
       </section>
 
-      <!-- ============ STEP 5 ============ -->
+      <!-- ============ STEP 5: REVIEW ============ -->
       <section class="step" data-s="4" hidden>
         <h2 class="sec-t">Review and submit</h2>
         <p class="sec-d">Please check your entry before submitting.</p>
         <div class="rev">
-          <div class="rh">About you <button type="button" onclick="goStep(0)">Edit</button></div>
+          <div class="rh">About you and sharing <button type="button" onclick="N1C.goStep(0)">Edit</button></div>
+          <div class="kv"><div class="k">Display publicly</div><div class="v" id="r-consent"></div></div>
           <div class="kv"><div class="k">Name</div><div class="v" id="r-name"></div></div>
           <div class="kv"><div class="k">Email</div><div class="v" id="r-email"></div></div>
           <div class="kv"><div class="k">Affiliation</div><div class="v" id="r-aff"></div></div>
         </div>
         <div class="rev">
-          <div class="rh">Variant <button type="button" onclick="goStep(1)">Edit</button></div>
+          <div class="rh">Variant <button type="button" onclick="N1C.goStep(1)">Edit</button></div>
           <div class="kv"><div class="k">Gene</div><div class="v" id="r-gene"></div></div>
           <div class="kv"><div class="k">Transcript</div><div class="v mono" id="r-tx"></div></div>
           <div class="kv"><div class="k">Coding change</div><div class="v mono" id="r-cvar"></div></div>
@@ -216,33 +231,89 @@
           <div class="kv"><div class="k">Reference</div><div class="v" id="r-link"></div></div>
         </div>
         <div class="rev">
-          <div class="rh">Therapy and project <button type="button" onclick="goStep(2)">Edit</button></div>
+          <div class="rh">Therapy and project <button type="button" onclick="N1C.goStep(2)">Edit</button></div>
           <div class="kv"><div class="k">Strategy</div><div class="v" id="r-strat"></div></div>
           <div class="kv"><div class="k">Status</div><div class="v" id="r-status"></div></div>
           <div class="kv"><div class="k">Applicable to others</div><div class="v" id="r-otherpt"></div></div>
           <div class="kv"><div class="k">Disease model</div><div class="v" id="r-model"></div></div>
         </div>
         <div class="rev">
-          <div class="rh">Sharing <button type="button" onclick="goStep(3)">Edit</button></div>
-          <div class="kv"><div class="k">Display publicly</div><div class="v" id="r-consent"></div></div>
+          <div class="rh">Public contact <button type="button" onclick="N1C.goStep(3)">Edit</button></div>
           <div class="kv"><div class="k">Public contact</div><div class="v" id="r-pcontact"></div></div>
         </div>
       </section>
 
       <div class="nav-btns">
-        <button type="button" class="btn ghost sm" id="back" onclick="prev()">&larr; Back</button>
-        <button type="button" class="btn" id="next" onclick="next()">Continue &rarr;</button>
+        <button type="button" class="btn ghost sm" id="back" onclick="N1C.prev()">&larr; Back</button>
+        <button type="button" class="btn" id="next" onclick="N1C.next()">Continue &rarr;</button>
         <span class="sp" id="stat"></span>
       </div>
     </div>
 
+    <!-- ============ SEVERAL PROJECTS FROM A FILE ============ -->
+    <div class="paper form bulk" id="bulkCard" style="display:none">
+      <h2 class="sec-t">Upload several projects at once</h2>
+      <p class="sec-d">Three steps: download the template, fill in one project per row (keep the header row as it is),
+        then choose the file here. The same checks as the form run over every row; nothing is blocked, and a curator
+        checks every entry by hand.</p>
+
+      <div class="bulk-steps">
+        <div class="bs"><b>1</b> <a class="btn ghost sm" href="Submission_Template.xlsx" download>Download the template</a>
+          <span class="bs-d">Excel file with one column per question.</span></div>
+        <div class="bs"><b>2</b> <span class="bs-d">Fill in one project per row. The variant can stay in one cell
+          (for example NM_000051.2:c.7865C>T: p.Ala2622Val); it is split automatically.</span></div>
+        <div class="bs"><b>3</b> <span class="bs-d">Choose the filled-in file below.</span></div>
+      </div>
+
+      <h3 class="sub-t">Your details</h3>
+      <div class="g2">
+        <div class="fg" id="fg-bulk-name">
+          <label for="bulk-name">Your name <span class="req">*</span><span class="vis priv">Not public</span></label>
+          <input id="bulk-name" autocomplete="name" placeholder="Dr Jane Doe">
+          <div class="hint">Used only if a row has no submitter name.</div>
+        </div>
+        <div class="fg" id="fg-bulk-email">
+          <label for="bulk-email">Email <span class="req">*</span><span class="vis priv">Not public</span></label>
+          <input id="bulk-email" type="email" autocomplete="email" placeholder="you@institution.eu">
+          <div class="hint">Where we contact you about this upload.</div>
+        </div>
+      </div>
+
+      <h3 class="sub-t">Your file</h3>
+      <div class="fg">
+        <label for="bulk-file">Choose the filled-in template <span class="req">*</span></label>
+        <input id="bulk-file" type="file" accept=".xlsx,.xls,.csv">
+        <div class="hint">Excel (.xlsx) or CSV, up to 2 MB and 500 rows. The file stays in your browser until you press Submit.</div>
+      </div>
+      <div class="summary" id="bulk-summary" style="display:none"></div>
+      <ul class="notes" id="bulk-notes" style="display:none"></ul>
+      <div class="preview" id="bulk-preview" style="display:none"></div>
+
+      <div class="nav-btns">
+        <button type="button" class="btn" id="bulk-submit" disabled>Submit all rows</button>
+        <span class="sp" id="bulk-stat"></span>
+      </div>
+    </div>
+
+    <!-- ============ RESULT PANELS ============ -->
     <div class="paper done" id="done">
       <div class="tick">&#10003;</div>
       <h2>Thank you, your project has been submitted</h2>
-      <p>A copy has been sent to your email address. An N1C curator will review the entry and it will appear
-        in the N-of-1 Projects registry once confirmed.</p>
-      <p>You can update or withdraw it at any time by replying to that email.</p>
+      <p data-email="on">A copy has been sent to your email address. An N1C curator will review the entry and it will appear
+        in the N-of-1 Projects registry once confirmed. You can update or withdraw it at any time by replying to that email.</p>
+      <p data-email="off">Please make a note of your reference number. An N1C curator will review the entry by hand and will
+        contact you if anything is unclear; it appears in the N-of-1 Projects registry once confirmed. To update or withdraw it,
+        email <a href="mailto:generegistry@n1collaborative.org">generegistry@n1collaborative.org</a> quoting the reference.</p>
       <div class="ref">Your reference: <b id="done-id"></b></div>
+    </div>
+
+    <div class="paper done" id="bulk-done" style="display:none">
+      <div class="tick">&#10003;</div>
+      <h2>Thank you, <span id="bulk-done-count"></span> projects have been submitted</h2>
+      <p>An N1C curator will review every row by hand and will contact you if anything is unclear. Please keep the
+        reference numbers below; quote them in any email to
+        <a href="mailto:generegistry@n1collaborative.org">generegistry@n1collaborative.org</a>.</p>
+      <div class="ref idlist">References: <b id="bulk-ids"></b></div>
     </div>
 
     <div class="paper failed" id="failed">
@@ -253,8 +324,18 @@
         and we will enter it for you.</p>
       <textarea id="failed-text" readonly></textarea>
       <div style="margin-top:12px">
-        <button type="button" class="btn sm" onclick="copyFallback()">Copy the text</button>
-        <button type="button" class="btn ghost sm" onclick="backToForm()">Back to the form</button>
+        <button type="button" class="btn sm" onclick="N1C.copyFallback()">Copy the text</button>
+        <button type="button" class="btn ghost sm" onclick="N1C.backToForm()">Back to the form</button>
+      </div>
+    </div>
+
+    <div class="paper failed" id="bulk-failed" style="display:none">
+      <h2>Your file could not be sent</h2>
+      <p>Something went wrong on our side. Nothing was saved. Please email the file itself to
+        <a href="mailto:generegistry@n1collaborative.org">generegistry@n1collaborative.org</a> with your name,
+        and we will enter the rows for you.</p>
+      <div style="margin-top:12px">
+        <button type="button" class="btn ghost sm" onclick="N1C.bulkBack()">Back to the upload</button>
       </div>
     </div>
   </div>
@@ -263,15 +344,15 @@
     <div class="paper c">
       <h3>What happens next</h3>
       <div class="s"><b>1 &middot;</b> Your entry is checked for format before it is sent.</div>
-      <div class="s"><b>2 &middot;</b> An N1C curator reviews it and resolves duplicates.</div>
+      <div class="s"><b>2 &middot;</b> An N1C curator reviews it by hand and contacts you if anything is unclear.</div>
       <div class="s"><b>3 &middot;</b> It appears in N-of-1 Projects at the next update.</div>
       <div class="s"><b>4 &middot;</b> You can update or withdraw it at any time.</div>
     </div>
     <div class="paper c">
       <h3>Many records at once?</h3>
-      <p>Use the bulk entry template. The same checks run over every row and you receive a report before
-        anything is accepted.</p>
-      <div style="margin-top:12px"><a class="btn ghost sm" href="Submission_Template.xlsx">Bulk entry template</a></div>
+      <p>Choose "Several projects" at the top of the page, download the template, fill in one project per row and
+        upload the file. Every row is checked and you see a summary before anything is sent.</p>
+      <div style="margin-top:12px"><button type="button" class="btn ghost sm" onclick="N1C.setMode('bulk')">Upload a file instead</button></div>
     </div>
   </div>
 
@@ -282,276 +363,157 @@
   <div><a href="mailto:generegistry@n1collaborative.org">generegistry@n1collaborative.org</a></div>
 </div></footer>
 
+<script src="xlsx.full.min.js"></script>
+<script src="n1c_forms.js"></script>
 <script>
-/* ============================================================
-   1. PASTE YOUR APPS SCRIPT WEB APP URL BETWEEN THE QUOTES.
-      It looks like https://script.google.com/macros/s/AKfy.../exec
-   ============================================================ */
-var ENDPOINT = 'https://script.google.com/macros/s/AKfycbyjqqZqOTYQaifwqfeSbZeCyfcdL2jzwbiibSoaVzkZh9ipO-_xo_qp_kZqAANYz4Vj/exec';
+(function () {
+  var $ = N1C.$, val = N1C.val, radio = N1C.radio, put = N1C.put, V = N1C.V, NORM = N1C.NORM;
 
-var STEP = 0, LAST = 4, touched = {}, forced = {}, sending = false;
-
-var RULES = {
-  email:  {el:'f-email', fg:'fg-email', step:0, name:'Email',
-           t:function(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()); },
-           bad:'Please enter a valid email address, for example j.doe@institution.eu',
-           good:'Valid email address'},
-  name:   {el:'f-name', fg:'fg-name', step:0, name:'Your name',
-           t:function(v){ return v.trim().length > 1; },
-           bad:'Please give your name.', good:'Thanks'},
-  aff:    {el:'f-aff', fg:'fg-aff', step:0, name:'Affiliation',
-           t:function(v){ return v.trim().length > 1; },
-           bad:'Please give your institution, department or lab.',
-           good:'This will appear as the contributing group'},
-  gene:   {el:'f-gene', fg:'fg-gene', step:1, name:'Gene name',
-           t:function(v){ return /^[A-Za-z][A-Za-z0-9@\-]{0,14}$/.test(v.trim()); },
-           bad:'Use an HGNC approved symbol with no spaces, for example CLN3.',
-           good:'Recognised symbol format'},
-  tx:     {el:'f-tx', fg:'fg-tx', step:1, name:'Reference transcript',
-           t:function(v){ return /^N[MR]_\d+\.\d+$/.test(v.trim()); },
-           bad:'Needs a RefSeq accession including the version, for example NM_001042432.2',
-           good:'Valid RefSeq accession'},
-  cvar:   {el:'f-cvar', fg:'fg-cvar', step:1, name:'Coding change',
-           t:function(v){ return /^c\..+/.test(v.trim()); },
-           bad:'The coding change must begin with c. For example c.1054C>T',
-           good:'Valid HGVS coding change'},
-  pvar:   {el:'f-pvar', fg:'fg-pvar', step:1, name:'Protein change',
-           t:function(v){ return v.trim() === '' || /^p\..+/.test(v.trim()); },
-           bad:'If given, the protein change must begin with p. For example p.Arg352*',
-           good:'Valid HGVS protein change'},
-  pcont:  {el:'f-pcontact', fg:'fg-pcontact', step:3, name:'Public contact',
-           t:function(v){ return v.trim().length > 3; },
-           bad:'Please give the name and email to display publicly.',
-           good:'This is what other researchers will see'}
-};
-var RADIOS = {
-  pubd:    {fg:'fg-pub',      step:1, name:'Published or deposited in databases'},
-  strat:   {fg:'fg-strat',    step:2, name:'Therapeutic strategy'},
-  otherpt: {fg:'fg-other-pt', step:2, name:'Applicable to other patients'},
-  model:   {fg:'fg-model',    step:2, name:'Disease model available'},
-  consent: {fg:'fg-consent',  step:3, name:'Sharing preference'}
-};
-
-function $(id){ return document.getElementById(id); }
-function val(id){ var e = $(id); return e ? e.value : ''; }
-function radio(n){ var e = document.querySelector('input[name="' + n + '"]:checked'); return e ? e.value : ''; }
-function put(id, v){ var e = $(id); if (!e) return; e.textContent = v || '—'; e.classList.toggle('empty', !v); }
-
-for (var k in RULES) {
-  var m = document.createElement('div');
-  m.className = 'ok-msg'; m.id = 'ok-' + k;
-  $(RULES[k].fg).appendChild(m);
-}
-
-function strategy(){
-  var s = radio('strat');
-  return (s === 'Other') ? (val('f-strat-other').trim() || 'Other') : s;
-}
-
-function check(){
-  var stepOk = {0:true,1:true,2:true,3:true,4:true}, problems = [];
-
-  for (var k in RULES) {
-    var r = RULES[k], raw = val(r.el), blank = raw.trim() === '', ok = r.t(raw);
-    var fg = $(r.fg), showBad = !ok && (touched[r.el] || forced[r.step]);
-    fg.classList.toggle('bad', showBad);
-    fg.classList.toggle('ok', ok && !blank);
-    var hint = fg.querySelector('.hint');
-    if (hint) {
-      if (!hint.dataset.orig) hint.dataset.orig = hint.innerHTML;
-      hint.innerHTML = showBad ? r.bad : hint.dataset.orig;
-    }
-    $('ok-' + k).textContent = (ok && !blank) ? '✓ ' + r.good : '';
-    if (!ok) { stepOk[r.step] = false; if (r.step === STEP) problems.push({n:r.name, t:r.el}); }
+  function strategy() {
+    var s = radio('strat');
+    return (s === 'Other') ? (val('f-strat-other').trim() || 'Other') : s;
   }
 
-  for (var n in RADIOS) {
-    var rr = RADIOS[n], got = radio(n) !== '';
-    $(rr.fg).classList.toggle('bad', !got && forced[rr.step]);
-    if (!got) { stepOk[rr.step] = false; if (rr.step === STEP) problems.push({n:rr.name, t:rr.fg}); }
-  }
+  /* ---------- step-by-step path ---------- */
+  N1C.initSteps({
+    kind: 'project',
+    last: 4,
+    rules: {
+      email: { el: 'f-email', fg: 'fg-email', step: 0, name: 'Email', t: V.email,
+               bad: 'Please enter a valid email address, for example j.doe@institution.eu', good: 'Valid email address' },
+      name:  { el: 'f-name', fg: 'fg-name', step: 0, name: 'Your name', t: function (v) { return v.trim().length > 1; },
+               bad: 'Please give your name.', good: 'Thanks' },
+      aff:   { el: 'f-aff', fg: 'fg-aff', step: 0, name: 'Affiliation', t: function (v) { return v.trim().length > 1; },
+               bad: 'Please give your institution, department or lab.', good: 'This will appear as the contributing group' },
+      gene:  { el: 'f-gene', fg: 'fg-gene', step: 1, name: 'Gene name', t: V.gene,
+               bad: 'Use an HGNC approved symbol with no spaces, for example CLN3.', good: 'Recognised symbol format' },
+      tx:    { el: 'f-tx', fg: 'fg-tx', step: 1, name: 'Reference transcript', t: V.transcript,
+               bad: 'Needs a RefSeq accession including the version, for example NM_001042432.2', good: 'Valid RefSeq accession' },
+      cvar:  { el: 'f-cvar', fg: 'fg-cvar', step: 1, name: 'Coding change', t: V.coding,
+               bad: 'The coding change must begin with c. For example c.1054C>T', good: 'Valid HGVS coding change' },
+      pvar:  { el: 'f-pvar', fg: 'fg-pvar', step: 1, name: 'Protein change', t: V.protein,
+               bad: 'If given, the protein change must begin with p. For example p.Arg352*', good: 'Valid HGVS protein change' },
+      pcont: { el: 'f-pcontact', fg: 'fg-pcontact', step: 3, name: 'Public contact',
+               t: function (v) { return radio('consent') !== 'Yes' || v.trim().length > 3; },
+               bad: 'Please give the name and email to display publicly.', good: 'This is what other researchers will see' }
+    },
+    radios: {
+      consent: { fg: 'fg-consent',  step: 0, name: 'Display on the registry (yes or no)' },
+      pubd:    { fg: 'fg-pub',      step: 1, name: 'Published or deposited in databases' },
+      strat:   { fg: 'fg-strat',    step: 2, name: 'Therapeutic strategy' },
+      otherpt: { fg: 'fg-other-pt', step: 2, name: 'Applicable to other patients' },
+      model:   { fg: 'fg-model',    step: 2, name: 'Disease model available' }
+    },
+    selects: {
+      'f-status': { fg: 'fg-status', step: 2, name: 'Project status' }
+    },
+    onRadio: function (group) {
+      if (group === 'strat') $('f-strat-other').style.display = (radio('strat') === 'Other') ? 'block' : 'none';
+    },
+    afterCheck: function () {
+      var st = val('f-status');
+      $('intnote').style.display = /Not Pursued/i.test(st) ? 'block' : 'none';
 
-  var st = val('f-status');
-  $('fg-status').classList.toggle('bad', !st && forced[2]);
-  $('intnote').style.display = (st === 'Currently not pursued') ? 'block' : 'none';
-  if (!st) { stepOk[2] = false; if (STEP === 2) problems.push({n:'Project status', t:'fg-status'}); }
+      var showPc = radio('consent') !== 'No';
+      $('fg-pcontact').style.display = showPc ? '' : 'none';
+      $('pc-intro-yes').style.display = showPc ? '' : 'none';
+      $('pc-intro-no').style.display = showPc ? 'none' : '';
 
-  var hg = $('hgvs');
-  if (RULES.tx.t(val('f-tx')) && RULES.cvar.t(val('f-cvar'))) {
-    var pv = val('f-pvar').trim();
-    $('hgvs-v').textContent = val('f-tx').trim() + ':' + val('f-cvar').trim() + (pv ? ' (' + pv + ')' : '');
-    hg.style.display = 'block';
-  } else { hg.style.display = 'none'; }
-
-  var es = $('errsum');
-  if (forced[STEP] && problems.length) {
-    es.innerHTML = '<b>' + problems.length + ' field' + (problems.length > 1 ? 's need' : ' needs') +
-      ' your attention before you can continue</b><ul>' +
-      problems.map(function(p){ return '<li data-t="' + p.t + '">' + p.n + '</li>'; }).join('') + '</ul>';
-    es.style.display = 'block';
-    Array.prototype.forEach.call(es.querySelectorAll('li'), function(li){
-      li.onclick = function(){
-        var t = $(li.dataset.t);
-        if (t) { t.scrollIntoView({behavior:'smooth', block:'center'}); if (t.focus) t.focus(); }
+      var hg = $('hgvs');
+      if (V.transcript(val('f-tx')) && V.coding(val('f-cvar'))) {
+        var pv = val('f-pvar').trim();
+        $('hgvs-v').textContent = val('f-tx').trim() + ':' + val('f-cvar').trim() + (pv ? ' (' + pv + ')' : '');
+        hg.style.display = 'block';
+      } else { hg.style.display = 'none'; }
+    },
+    fillReview: function () {
+      put('r-consent', radio('consent') === 'Yes' ? 'Yes, share on the public registry' :
+                       radio('consent') === 'No'  ? 'No, keep on file within the N1C' : '');
+      put('r-name', val('f-name')); put('r-email', val('f-email')); put('r-aff', val('f-aff'));
+      put('r-gene', val('f-gene')); put('r-tx', val('f-tx'));
+      put('r-cvar', val('f-cvar')); put('r-pvar', val('f-pvar'));
+      put('r-pubd', radio('pubd')); put('r-link', val('f-link'));
+      put('r-strat', strategy()); put('r-status', val('f-status'));
+      put('r-otherpt', radio('otherpt')); put('r-model', radio('model'));
+      put('r-pcontact', radio('consent') === 'No' ? 'Not needed (not displayed)' : val('f-pcontact'));
+    },
+    payload: function () {
+      return {
+        submitterName:    val('f-name').trim(),
+        submitterEmail:   val('f-email').trim(),
+        followUp:         val('f-alt').trim(),
+        affiliation:      val('f-aff').trim(),
+        displayPublicly:  radio('consent'),
+        publicContact:    radio('consent') === 'No' ? '' : val('f-pcontact').trim(),
+        gene:             val('f-gene').trim().toUpperCase(),
+        transcript:       val('f-tx').trim(),
+        codingChange:     val('f-cvar').trim(),
+        proteinChange:    val('f-pvar').trim(),
+        modality:         strategy(),
+        status:           val('f-status'),
+        confirmedChange:  val('f-conf').trim(),
+        published:        radio('pubd'),
+        link:             val('f-link').trim(),
+        otherPatients:    radio('otherpt'),
+        diseaseModel:     radio('model'),
+        diseaseModelDesc: val('f-model-d').trim(),
+        comments:         val('f-comments').trim()
       };
-    });
-  } else { es.style.display = 'none'; }
-
-  Array.prototype.forEach.call(document.querySelectorAll('#steps .s'), function(b){
-    var i = +b.dataset.i;
-    b.classList.toggle('ok', i < LAST && stepOk[i] && i !== STEP);
-  });
-  return stepOk;
-}
-
-function fillReview(){
-  put('r-name', val('f-name')); put('r-email', val('f-email')); put('r-aff', val('f-aff'));
-  put('r-gene', val('f-gene')); put('r-tx', val('f-tx'));
-  put('r-cvar', val('f-cvar')); put('r-pvar', val('f-pvar'));
-  put('r-pubd', radio('pubd')); put('r-link', val('f-link'));
-  put('r-strat', strategy()); put('r-status', val('f-status'));
-  put('r-otherpt', radio('otherpt')); put('r-model', radio('model'));
-  put('r-consent', radio('consent') === 'Yes' ? 'Yes, share on the public registry' :
-                   radio('consent') === 'No'  ? 'No, keep on file within the N1C' : '');
-  put('r-pcontact', val('f-pcontact'));
-}
-
-function show(){
-  Array.prototype.forEach.call(document.querySelectorAll('.step'), function(s){
-    s.hidden = (+s.dataset.s !== STEP);
-  });
-  Array.prototype.forEach.call(document.querySelectorAll('#steps .s'), function(b){
-    b.classList.toggle('on', +b.dataset.i === STEP);
-  });
-  $('back').style.visibility = STEP === 0 ? 'hidden' : 'visible';
-  $('next').innerHTML = STEP === LAST ? 'Submit' : 'Continue &rarr;';
-  if (STEP === LAST) fillReview();
-  check();
-  $('stat').textContent = '';
-  window.scrollTo({top:0, behavior:'smooth'});
-}
-function goStep(i){ STEP = i; show(); }
-function prev(){ if (STEP > 0) { STEP--; show(); } }
-
-function payload(){
-  return {
-    website:          val('f-website'),
-    submitterName:    val('f-name').trim(),
-    submitterEmail:   val('f-email').trim(),
-    followUp:         val('f-alt').trim(),
-    affiliation:      val('f-aff').trim(),
-    displayPublicly:  radio('consent'),
-    publicContact:    val('f-pcontact').trim(),
-    gene:             val('f-gene').trim().toUpperCase(),
-    transcript:       val('f-tx').trim(),
-    codingChange:     val('f-cvar').trim(),
-    proteinChange:    val('f-pvar').trim(),
-    modality:         strategy(),
-    status:           val('f-status'),
-    confirmedChange:  val('f-conf').trim(),
-    published:        radio('pubd'),
-    link:             val('f-link').trim(),
-    otherPatients:    radio('otherpt'),
-    diseaseModel:     radio('model'),
-    diseaseModelDesc: val('f-model-d').trim(),
-    comments:         val('f-comments').trim()
-  };
-}
-
-function next(){
-  forced[STEP] = true;
-  var ok = check();
-  if (!ok[STEP]) { $('errsum').scrollIntoView({behavior:'smooth', block:'center'}); return; }
-  if (STEP !== LAST) { STEP++; show(); return; }
-  send();
-}
-
-function send(){
-  if (sending) return;
-  sending = true;
-  var btn = $('next');
-  btn.disabled = true;
-  btn.textContent = 'Sending…';
-  $('stat').textContent = 'Please wait, this takes a few seconds.';
-
-  var data = payload();
-
-  fetch(ENDPOINT, {
-    method: 'POST',
-    body: JSON.stringify(data)          // text/plain, so no CORS preflight
-  })
-  .then(function(r){ return r.json().catch(function(){ return {ok:true}; }); })
-  .then(function(res){
-    if (res && res.ok === false) throw new Error(res.error || 'rejected');
-    succeed(res && res.id ? res.id : '');
-  })
-  .catch(function(){ fail(data); });
-}
-
-function succeed(id){
-  $('formCard').style.display = 'none';
-  $('steps').style.display = 'none';
-  $('after').style.display = 'none';
-  $('done-id').textContent = id || 'sent';
-  $('done').style.display = 'block';
-  window.scrollTo({top:0, behavior:'smooth'});
-}
-
-function fail(data){
-  sending = false;
-  $('next').disabled = false;
-  $('next').textContent = 'Submit';
-  $('stat').textContent = '';
-  var lines = [];
-  for (var k in data) { if (k !== 'website') lines.push(k + ': ' + data[k]); }
-  $('failed-text').value = lines.join('\n');
-  $('formCard').style.display = 'none';
-  $('steps').style.display = 'none';
-  $('failed').style.display = 'block';
-  window.scrollTo({top:0, behavior:'smooth'});
-}
-
-function copyFallback(){
-  var t = $('failed-text');
-  t.select(); t.setSelectionRange(0, 99999);
-  try { document.execCommand('copy'); } catch (e) {}
-}
-function backToForm(){
-  $('failed').style.display = 'none';
-  $('formCard').style.display = 'block';
-  $('steps').style.display = 'flex';
-  window.scrollTo({top:0, behavior:'smooth'});
-}
-
-Array.prototype.forEach.call(document.querySelectorAll('#steps .s'), function(b){
-  b.onclick = function(){ goStep(+b.dataset.i); };
-});
-
-Array.prototype.forEach.call(document.querySelectorAll('input,select,textarea'), function(el){
-  el.addEventListener('input', function(){ check(); });
-  el.addEventListener('change', function(){ check(); });
-  el.addEventListener('blur', function(){ if (el.value.trim() !== '') touched[el.id] = true; check(); });
-});
-
-$('f-gene').addEventListener('blur', function(){ this.value = this.value.trim().toUpperCase(); check(); });
-['f-tx','f-cvar','f-pvar','f-email','f-aff','f-name'].forEach(function(id){
-  $(id).addEventListener('blur', function(){ this.value = this.value.trim(); check(); });
-});
-
-Array.prototype.forEach.call(document.querySelectorAll('.radio label'), function(l){
-  l.addEventListener('change', function(){
-    Array.prototype.forEach.call(
-      document.querySelectorAll('.radio label[data-g="' + l.dataset.g + '"]'), function(x){
-        x.classList.toggle('sel', !!x.querySelector('input:checked'));
-      });
-    if (l.dataset.g === 'strat') {
-      $('f-strat-other').style.display = (radio('strat') === 'Other') ? 'block' : 'none';
     }
-    check();
   });
-});
 
-show();
+  $('f-gene').addEventListener('blur', function () { this.value = this.value.trim().toUpperCase(); N1C.check(); });
+  ['f-tx', 'f-cvar', 'f-pvar', 'f-email', 'f-aff', 'f-name'].forEach(function (id) {
+    $(id).addEventListener('blur', function () { this.value = this.value.trim(); N1C.check(); });
+  });
+
+  /* ---------- file-upload path ---------- */
+  N1C.initBulk({
+    kind: 'project',
+    label: 'project',
+    keys: ['gene', 'variantTargeted', 'transcript', 'codingChange'],
+    previewKeys: ['gene', 'transcript', 'codingChange', 'proteinChange', 'modality', 'status', 'displayPublicly'],
+    columns: [
+      { key: 'submitterEmail', label: 'Email', aliases: ['email address', 'submitter email', 'email'], required: true, check: V.email, checkMsg: 'email address looks wrong' },
+      { key: 'submitterName', label: 'Name', aliases: ['your name', 'your name:', 'submitter name', 'name'], required: true },
+      { key: 'affiliation', label: 'Affiliation', aliases: ['what is your affiliation*', 'affiliation', 'contributing group', 'institution'] },
+      { key: 'followUp', label: 'Follow up contact', aliases: ['if it is different from the submitter*', 'follow up contact', 'follow-up contact'] },
+      { key: 'gene', label: 'Gene', aliases: ['gene name*', 'gene'], required: true, check: V.gene, checkMsg: 'gene symbol looks wrong',
+        norm: function (v) { return String(v).trim().toUpperCase(); } },
+      { key: 'variantTargeted', label: 'Variant targeted', aliases: ['variant targeted*', 'variant'] },
+      { key: 'transcript', label: 'Transcript', aliases: ['refseq transcript', 'reference transcript', 'transcript'], check: V.transcript, checkMsg: 'transcript needs a RefSeq accession with a version, for example NM_000051.2' },
+      { key: 'codingChange', label: 'Coding change (c.)', aliases: ['coding dna change (c.)', 'coding change (c.)', 'coding change', 'coding dna change'], check: V.coding, checkMsg: 'coding change does not start with c.' },
+      { key: 'proteinChange', label: 'Protein change (p.)', aliases: ['predicted protein change (p.)', 'protein change (p.)', 'protein change', 'predicted protein change'], check: V.protein, checkMsg: 'protein change does not start with p.' },
+      { key: 'confirmedChange', label: 'Confirmed protein or RNA change', aliases: ['is there a confirmed protein*', 'confirmed protein or rna change'] },
+      { key: 'published', label: 'Published or deposited', aliases: ['has this variant been published*', 'published or deposited'], norm: NORM.yesNo },
+      { key: 'link', label: 'Publication or database link', aliases: ['please provide link*', 'publication or database link', 'link to the publication*'] },
+      { key: 'modality', label: 'Therapeutic strategy', aliases: ['what is your therapeutic strategy*', 'therapeutic modality', 'therapeutic strategy'], required: true, norm: NORM.modality },
+      { key: 'n1cGuidelines', label: 'Assessed with N1C guidelines?', aliases: ['has the variant been assessed*', 'assessed with n1c guidelines?'] , norm: NORM.yesNo },
+      { key: 'n1cOutcome', label: 'N1C guidelines outcome', aliases: ['what is the outcome*', 'n1c guidelines outcome'] },
+      { key: 'asoApproach', label: 'ASO design approach', aliases: ['what is the approach for your aso*', 'aso design approach', 'approach'] },
+      { key: 'status', label: 'Project status', aliases: ['what is the status of your project*', 'status'], required: true, norm: NORM.status },
+      { key: 'otherPatients', label: 'Applicable to other patients', aliases: ['could this therapy be applied*', 'applicable to other patients'], norm: NORM.yesNo },
+      { key: 'diseaseModel', label: 'Disease model available', aliases: ['is there a disease model*', 'disease model available'], norm: NORM.yesNo },
+      { key: 'diseaseModelDesc', label: 'Disease model description', aliases: ['if yes, describe*', 'disease model description'] },
+      { key: 'displayPublicly', label: 'Display on the registry', aliases: ['do you agree for your project*', 'display publicly', 'display in registry', 'display on the registry'], required: true, norm: NORM.yesNo },
+      { key: 'publicContact', label: 'Public contact', aliases: ['please provide the contact name*', 'public contact', 'contact name and email to display*'] },
+      { key: 'comments', label: 'Additional comments', aliases: ['do you have any additional comments*', 'additional comments', 'comments'] }
+    ],
+    derive: function (f, note) {
+      if ((!f.transcript || !f.codingChange) && f.variantTargeted) {
+        var vt = f.variantTargeted;
+        var t = /N[MR]_\d+\.\d+/i.exec(vt), c = /c\.[^\s:;,()]+/i.exec(vt), p = /p\.[^\s:;,()]+/i.exec(vt);
+        if (!f.transcript && t) f.transcript = t[0].toUpperCase();
+        if (!f.codingChange && c) f.codingChange = c[0];
+        if (!f.proteinChange && p) f.proteinChange = p[0];
+        if (!t || !c) note('variant could not be split into transcript and c. change: "' + vt + '"');
+      }
+      if (!f.transcript && !f.variantTargeted) note('transcript is missing');
+      if (!f.codingChange && !f.variantTargeted) note('coding change (c.) is missing');
+      if (f.displayPublicly === 'Yes' && !f.publicContact) note('display is Yes but no public contact was given');
+    }
+  });
+})();
 </script>
 </body>
 </html>

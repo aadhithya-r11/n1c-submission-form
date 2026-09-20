@@ -1,0 +1,22 @@
+/* ============================================================
+   N1C Gene Registry - Submit a Variant Assessment
+   Loaded after submit.css. Only the accent changes, so the two
+   forms look different at a glance while sharing one layout.
+   ============================================================ */
+:root{
+  --v-accent:#0e8f7a;
+  --v-accent-dark:#0a6f5f;
+  --v-accent-soft:rgba(14,143,122,.18);
+  --v-accent-text:#7fe0cb;
+}
+.eyebrow{color:var(--v-accent-text)}
+.page-head .notice{margin-top:12px;font-size:14px;color:#fff;background:var(--v-accent-soft);
+  border-left:3px solid var(--v-accent);border-radius:6px;padding:10px 14px}
+.mode .m.on{background:var(--v-accent-soft);border-color:rgba(14,143,122,.7)}
+.steps .s.on{background:var(--v-accent-soft)}
+.steps .s.on .n{background:var(--v-accent);border-color:var(--v-accent)}
+.btn:not(.ghost){background:var(--v-accent)}
+.btn:not(.ghost):hover{background:var(--v-accent-dark)}
+.btn.ghost:hover{border-color:var(--v-accent);color:var(--v-accent-dark)}
+.rev .rh button{color:var(--v-accent-dark)}
+.bulk-steps .bs b{background:var(--v-accent)}

@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Submit a Variant Assessment | N1C Gene Registry</title>
+<meta name="description" content="Submit an assessment of a variant's eligibility for a therapeutic approach to the N1C Gene Registry, one at a time or from a file.">
+<link rel="stylesheet" href="submit.css">
+<link rel="stylesheet" href="submit_variant.css">
+</head>
+<body>
+
+<header class="site-head"><div class="wrap">
+  <div class="bar">
+    <a class="brand" href="index.html"><img src="N1C_logo.jpg" alt=""> N1C Gene Registry</a>
+    <a class="back" href="assessed_variants.html">Back to Assessed Variants</a>
+  </div>
+</div></header>
+
+<div class="wrap">
+
+  <div class="page-head">
+    <div class="eyebrow">Assessed Variants</div>
+    <h1>Submit a Variant Assessment</h1>
+    <p>Have you assessed whether a variant is eligible for a therapeutic approach? Share the assessment with the
+      N1C Gene Registry. This form is for variant assessments; to submit a therapy development project, use the
+      <a href="submit.html">N-of-1 projects form</a>. For questions, write to
+      <a href="mailto:generegistry@n1collaborative.org">generegistry@n1collaborative.org</a>.</p>
+    <p class="notice">The name of your group is shown next to your assessment on the registry, the way ClinVar shows
+      each submitter. Several groups may assess the same variant.</p>
+  </div>
+
+  <!-- ============ HOW WOULD YOU LIKE TO SUBMIT? ============ -->
+  <div class="mode" id="mode">
+    <button type="button" class="m on" id="mode-single" onclick="N1C.setMode('single')">
+      <span class="mt">One assessment</span><span class="md">Fill in the form step by step</span></button>
+    <button type="button" class="m" id="mode-bulk" onclick="N1C.setMode('bulk')">
+      <span class="mt">Several assessments</span><span class="md">Upload a filled-in template file</span></button>
+  </div>
+
+  <div class="steps" id="steps">
+    <button type="button" class="s on" data-i="0"><span class="n">1</span><span class="t">About you &amp; sharing</span></button>
+    <button type="button" class="s" data-i="1"><span class="n">2</span><span class="t">Disease &amp; gene</span></button>
+    <button type="button" class="s" data-i="2"><span class="n">3</span><span class="t">Variant</span></button>
+    <button type="button" class="s" data-i="3"><span class="n">4</span><span class="t">Assessment</span></button>
+    <button type="button" class="s" data-i="4"><span class="n">5</span><span class="t">Review &amp; submit</span></button>
+  </div>
+
+  <div class="layout">
+    <div class="paper form" id="formCard">
+      <div class="errsum" id="errsum"></div>
+
+      <!-- honeypot: hidden from people, filled in by bots -->
+      <div style="position:absolute;left:-9999px" aria-hidden="true">
+        <label for="f-website">Leave this field empty</label>
+        <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off">
+      </div>
+
+      <!-- ============ STEP 1: ABOUT YOU AND SHARING ============ -->
+      <section class="step" data-s="0">
+        <h2 class="sec-t">About you and sharing</h2>
+        <p class="sec-d">First, tell us whether this assessment may be shown on the public registry. The group name is
+          public; your own name and email are not.</p>
+        <div class="fg" id="fg-consent">
+          <label>Do you agree for this assessment to be displayed on the N1C Gene Registry,
+            with the name of your group shown as the assessor? <span class="req">*</span></label>
+          <div class="radio">
+            <label data-g="consent"><input type="radio" name="consent" value="Yes"> Yes, please display it on the public registry.</label>
+            <label data-g="consent"><input type="radio" name="consent" value="No"> No, please keep it on file within the N1C and do not display it publicly.</label>
+          </div>
+        </div>
+        <div class="fg" id="fg-group">
+          <label for="f-group">Submitting group or assessor <span class="req">*</span><span class="vis pub">Public</span></label>
+          <input id="f-group" autocomplete="organization" placeholder="For example UPNAT, or the name of your lab">
+          <div class="hint">Shown next to the assessment on the registry.</div>
+        </div>
+        <div class="g2">
+          <div class="fg" id="fg-email">
+            <label for="f-email">Contact email <span class="req">*</span><span class="vis priv">Not public</span></label>
+            <input id="f-email" type="email" autocomplete="email" placeholder="you@institution.eu">
+            <div class="hint">Where we contact you about this submission.</div>
+          </div>
+          <div class="fg" id="fg-name">
+            <label for="f-name">Your name <span class="req">*</span><span class="vis priv">Not public</span></label>
+            <input id="f-name" autocomplete="name" placeholder="Dr Jane Doe">
+            <div class="hint">The person making this submission.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ STEP 2: DISEASE AND GENE ============ -->
+      <section class="step" data-s="1" hidden>
+        <h2 class="sec-t">Disease and gene</h2>
+        <p class="sec-d">The condition the variant causes and the gene it sits in.</p>
+        <div class="g2">
+          <div class="fg" id="fg-disease">
+            <label for="f-disease">Disease <span class="req">*</span><span class="vis pub">Public</span></label>
+            <input id="f-disease" placeholder="Developmental and Epileptic Encephalopathy 65">
+            <div class="hint">The disease name as used in Mondo.</div>
+          </div>
+          <div class="fg" id="fg-mondo">
+            <label for="f-mondo">Mondo ID <span class="req">*</span><span class="vis pub">Public</span></label>
+            <input id="f-mondo" placeholder="MONDO:0033374">
+            <div class="hint">Look it up at <a href="https://monarchinitiative.org/" target="_blank" rel="noopener">monarchinitiative.org</a>.</div>
+          </div>
+        </div>
+        <div class="g2">
+          <div class="fg" id="fg-gene">
+            <label for="f-gene">Gene <span class="req">*</span><span class="vis pub">Public</span></label>
+            <input id="f-gene" placeholder="CYFIP2">
+            <div class="hint">HUGO approved symbol. Check at
+              <a href="https://www.genenames.org/" target="_blank" rel="noopener">genenames.org</a>.</div>
+          </div>
+          <div class="fg" id="fg-inh">
+            <label for="f-inh">Inheritance <span class="req">*</span><span class="vis pub">Public</span></label>
+            <select id="f-inh">
+              <option value="">Choose&hellip;</option>
+              <option>Autosomal recessive</option>
+              <option>Autosomal dominant</option>
+              <option>X-linked recessive</option>
+              <option>X-linked dominant</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="fg" id="fg-patho">
+          <label for="f-patho">Pathomechanism <span class="req">*</span><span class="vis pub">Public</span></label>
+          <select id="f-patho">
+            <option value="">Choose&hellip;</option>
+            <option>Loss of function</option>
+            <option>Gain of function</option>
+            <option>Dominant negative</option>
+            <option>Mixed gain and loss of function</option>
+            <option>Unknown</option>
+          </select>
+        </div>
+      </section>
+
+      <!-- ============ STEP 3: VARIANT ============ -->
+      <section class="step" data-s="2" hidden>
+        <h2 class="sec-t">Variant</h2>
+        <p class="sec-d">Genome build GRCh38 is used for every entry. Transcript, coding change and protein change go in
+          separate boxes and are checked as you type.</p>
+        <div class="g2">
+          <div class="fg">
+            <label>Genome build <span class="vis pub">Public</span></label>
+            <input value="GRCh38" readonly style="background:var(--paper-2);color:var(--muted)">
+          </div>
+          <div class="fg" id="fg-chr">
+            <label for="f-chr">Chromosome <span class="req">*</span><span class="vis pub">Public</span></label>
+            <select id="f-chr">
+              <option value="">Choose&hellip;</option>
+              <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+              <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+              <option>11</option><option>12</option><option>13</option><option>14</option><option>15</option>
+              <option>16</option><option>17</option><option>18</option><option>19</option><option>20</option>
+              <option>21</option><option>22</option><option>X</option><option>Y</option><option>MT</option>
+            </select>
+          </div>
+        </div>
+        <div class="g2">
+          <div class="fg" id="fg-pos">
+            <label for="f-pos">Genomic position <span class="opt">&middot; optional</span><span class="vis pub">Public</span></label>
+            <input id="f-pos" inputmode="numeric" placeholder="157294834">
+            <div class="hint">Whole number, GRCh38.</div>
+          </div>
+          <div class="fg" id="fg-ghgvs">
+            <label for="f-ghgvs">Genomic HGVS <span class="opt">&middot; optional</span><span class="vis pub">Public</span></label>
+            <input id="f-ghgvs" placeholder="NC_000005.10:g.157294834C>T">
+            <div class="hint">Begins with NC_, then :g.</div>
+          </div>
+        </div>
+        <div class="g2">
+          <div class="fg" id="fg-ref">
+            <label for="f-ref">Reference allele <span class="opt">&middot; optional</span><span class="vis pub">Public</span></label>
+            <input id="f-ref" placeholder="C">
+            <div class="hint">A, C, G, T, or - for a deletion.</div>
+          </div>
+          <div class="fg" id="fg-alt">
+            <label for="f-alt">Alternate allele <span class="opt">&middot; optional</span><span class="vis pub">Public</span></label>
+            <input id="f-alt" placeholder="T">
+            <div class="hint">A, C, G, T, or - for a deletion.</div>
+          </div>
+        </div>
+        <div class="g2">
+          <div class="fg" id="fg-tx">
+            <label for="f-tx">RefSeq transcript <span class="req">*</span><span class="vis pub">Public</span></label>
+            <input id="f-tx" placeholder="NM_001037333.3">
+            <div class="hint">RefSeq accession including the version number.</div>
+          </div>
+          <div class="fg" id="fg-cvar">
+            <label for="f-cvar">Coding DNA change (c.) <span class="req">*</span><span class="vis pub">Public</span></label>
+            <input id="f-cvar" placeholder="c.259C>T">
+            <div class="hint">HGVS notation, beginning with c.</div>
+          </div>
+        </div>
+        <div class="g2">
+          <div class="fg" id="fg-pvar">
+            <label for="f-pvar">Predicted protein change (p.) <span class="opt">&middot; optional</span><span class="vis pub">Public</span></label>
+            <input id="f-pvar" placeholder="p.Arg87Cys">
+            <div class="hint">HGVS notation. Use p.? if not predictable.</div>
+          </div>
+          <div class="fg" id="fg-splice">
+            <label for="f-splice">Splicing effect? <span class="req">*</span><span class="vis pub">Public</span></label>
+            <select id="f-splice">
+              <option value="">Choose&hellip;</option>
+              <option>Yes</option><option>No</option><option>Unknown</option>
+            </select>
+          </div>
+        </div>
+        <div class="hgvs" id="hgvs">Full notation: <b class="mono" id="hgvs-v"></b></div>
+        <div class="fg">
+          <label for="f-conf">Confirmed protein or RNA change, if different from predicted
+            <span class="opt">&middot; optional</span><span class="vis pub">Public</span></label>
+          <textarea id="f-conf" placeholder="Any change verified by functional studies, and how it differed from the prediction."></textarea>
+        </div>
+        <div class="g2">
+          <div class="fg" id="fg-clinvar">
+            <label for="f-clinvar">ClinVar link <span class="opt">&middot; optional</span><span class="vis pub">Public</span></label>
+            <input id="f-clinvar" placeholder="https://www.ncbi.nlm.nih.gov/clinvar/variation/430807">
+            <div class="hint">The variant's page on ClinVar, if it has one.</div>
+          </div>
+          <div class="fg" id="fg-vpub">
+            <label for="f-vpub">Variant publication <span class="opt">&middot; optional</span><span class="vis pub">Public</span></label>
+            <input id="f-vpub" placeholder="https://pubmed.ncbi.nlm.nih.gov/29534297">
+            <div class="hint">Web address of the paper describing the variant.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ STEP 4: ASSESSMENT ============ -->
+      <section class="step" data-s="3" hidden>
+        <h2 class="sec-t">Assessment</h2>
+        <p class="sec-d">One therapeutic modality and approach per entry. To record a second approach for the same
+          variant, submit again or add a row in the file upload.</p>
+        <div class="g2">
+          <div class="fg" id="fg-date">
+            <label for="f-date">Date of assessment <span class="req">*</span><span class="vis pub">Public</span></label>
+            <input id="f-date" type="date">
+            <div class="hint">The day the assessment was completed.</div>
+          </div>
+          <div class="fg" id="fg-mod">
+            <label for="f-mod">Therapeutic modality <span class="req">*</span><span class="vis pub">Public</span></label>
+            <select id="f-mod">
+              <option value="">Choose&hellip;</option>
+              <option>Antisense oligonucleotide</option>
+              <option>Gene replacement</option>
+              <option>Gene editing</option>
+              <option>RNA editing</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="g2">
+          <div class="fg" id="fg-approach">
+            <label for="f-approach">Approach <span class="req">*</span><span class="vis pub">Public</span></label>
+            <select id="f-approach">
+              <option value="">Choose&hellip;</option>
+              <option>Exon skipping</option>
+              <option>Splice correction</option>
+              <option>Exon inclusion</option>
+              <option>Knockdown</option>
+              <option>Knockdown (allele-selective)</option>
+              <option>Gene replacement</option>
+              <option>Other</option>
+              <option>Not applicable</option>
+            </select>
+          </div>
+          <div class="fg" id="fg-elig">
+            <label for="f-elig">Eligibility <span class="req">*</span><span class="vis pub">Public</span></label>
+            <select id="f-elig">
+              <option value="">Choose&hellip;</option>
+              <option>Eligible</option>
+              <option>Likely eligible</option>
+              <option>Unlikely eligible</option>
+              <option>Not eligible</option>
+              <option>Unable to assess</option>
+              <option>Under development</option>
+            </select>
+          </div>
+        </div>
+        <div class="fg" id="fg-text">
+          <label for="f-text">Assessment text <span class="req">*</span><span class="vis pub">Public</span></label>
+          <textarea id="f-text" style="min-height:150px" placeholder="The reasoning behind the verdict: the variant, its classification, the exon or mechanism concerned, the evidence considered, and the guidelines version used."></textarea>
+          <div class="hint">This is the text shown on the registry with your group's name.</div>
+        </div>
+        <div class="fg" id="fg-apub">
+          <label for="f-apub">Assessment publication <span class="opt">&middot; optional</span><span class="vis pub">Public</span></label>
+          <input id="f-apub" placeholder="https://doi.org/...">
+          <div class="hint">Web address of a paper describing this assessment, if there is one.</div>
+        </div>
+      </section>
+
+      <!-- ============ STEP 5: REVIEW ============ -->
+      <section class="step" data-s="4" hidden>
+        <h2 class="sec-t">Review and submit</h2>
+        <p class="sec-d">Please check your entry before submitting.</p>
+        <div class="rev">
+          <div class="rh">About you and sharing <button type="button" onclick="N1C.goStep(0)">Edit</button></div>
+          <div class="kv"><div class="k">Display publicly</div><div class="v" id="r-consent"></div></div>
+          <div class="kv"><div class="k">Group or assessor</div><div class="v" id="r-group"></div></div>
+          <div class="kv"><div class="k">Contact</div><div class="v" id="r-contact"></div></div>
+        </div>
+        <div class="rev">
+          <div class="rh">Disease and gene <button type="button" onclick="N1C.goStep(1)">Edit</button></div>
+          <div class="kv"><div class="k">Disease</div><div class="v" id="r-disease"></div></div>
+          <div class="kv"><div class="k">Mondo ID</div><div class="v mono" id="r-mondo"></div></div>
+          <div class="kv"><div class="k">Gene</div><div class="v" id="r-gene"></div></div>
+          <div class="kv"><div class="k">Inheritance</div><div class="v" id="r-inh"></div></div>
+          <div class="kv"><div class="k">Pathomechanism</div><div class="v" id="r-patho"></div></div>
+        </div>
+        <div class="rev">
+          <div class="rh">Variant <button type="button" onclick="N1C.goStep(2)">Edit</button></div>
+          <div class="kv"><div class="k">Position (GRCh38)</div><div class="v mono" id="r-pos"></div></div>
+          <div class="kv"><div class="k">Genomic HGVS</div><div class="v mono" id="r-ghgvs"></div></div>
+          <div class="kv"><div class="k">Transcript</div><div class="v mono" id="r-tx"></div></div>
+          <div class="kv"><div class="k">Coding change</div><div class="v mono" id="r-cvar"></div></div>
+          <div class="kv"><div class="k">Protein change</div><div class="v mono" id="r-pvar"></div></div>
+          <div class="kv"><div class="k">Splicing effect</div><div class="v" id="r-splice"></div></div>
+          <div class="kv"><div class="k">ClinVar</div><div class="v" id="r-clinvar"></div></div>
+        </div>
+        <div class="rev">
+          <div class="rh">Assessment <button type="button" onclick="N1C.goStep(3)">Edit</button></div>
+          <div class="kv"><div class="k">Date</div><div class="v" id="r-date"></div></div>
+          <div class="kv"><div class="k">Modality</div><div class="v" id="r-mod"></div></div>
+          <div class="kv"><div class="k">Approach</div><div class="v" id="r-approach"></div></div>
+          <div class="kv"><div class="k">Eligibility</div><div class="v" id="r-elig"></div></div>
+          <div class="kv"><div class="k">Assessment text</div><div class="v" id="r-text"></div></div>
+        </div>
+      </section>
+
+      <div class="nav-btns">
+        <button type="button" class="btn ghost sm" id="back" onclick="N1C.prev()">&larr; Back</button>
+        <button type="button" class="btn" id="next" onclick="N1C.next()">Continue &rarr;</button>
+        <span class="sp" id="stat"></span>
+      </div>
+    </div>
+
+    <!-- ============ SEVERAL ASSESSMENTS FROM A FILE ============ -->
+    <div class="paper form bulk" id="bulkCard" style="display:none">
+      <h2 class="sec-t">Upload several assessments at once</h2>
+      <p class="sec-d">Three steps: download the template, fill in one assessment per row (keep the header row as it is),
+        then choose the file here. The same checks as the form run over every row; nothing is blocked, and a curator
+        checks every entry by hand.</p>
+
+      <div class="bulk-steps">
+        <div class="bs"><b>1</b> <a class="btn ghost sm" href="Variant_Assessment_Template.xlsx" download>Download the template</a>
+          <span class="bs-d">Excel file with one column per field, the allowed values on an Options tab, and two example rows.</span></div>
+        <div class="bs"><b>2</b> <span class="bs-d">Fill in one assessment per row: one modality and approach per row, so a variant assessed for two approaches takes two rows.</span></div>
+        <div class="bs"><b>3</b> <span class="bs-d">Choose the filled-in file below.</span></div>
+      </div>
+
+      <h3 class="sub-t">Your details</h3>
+      <div class="g2">
+        <div class="fg" id="fg-bulk-name">
+          <label for="bulk-name">Your name <span class="req">*</span><span class="vis priv">Not public</span></label>
+          <input id="bulk-name" autocomplete="name" placeholder="Dr Jane Doe">
+          <div class="hint">Used only if a row has no contact name.</div>
+        </div>
+        <div class="fg" id="fg-bulk-email">
+          <label for="bulk-email">Email <span class="req">*</span><span class="vis priv">Not public</span></label>
+          <input id="bulk-email" type="email" autocomplete="email" placeholder="you@institution.eu">
+          <div class="hint">Where we contact you about this upload.</div>
+        </div>
+      </div>
+
+      <h3 class="sub-t">Your file</h3>
+      <div class="fg">
+        <label for="bulk-file">Choose the filled-in template <span class="req">*</span></label>
+        <input id="bulk-file" type="file" accept=".xlsx,.xls,.csv">
+        <div class="hint">Excel (.xlsx) or CSV, up to 2 MB and 500 rows. The file stays in your browser until you press Submit.</div>
+      </div>
+      <div class="summary" id="bulk-summary" style="display:none"></div>
+      <ul class="notes" id="bulk-notes" style="display:none"></ul>
+      <div class="preview" id="bulk-preview" style="display:none"></div>
+
+      <div class="nav-btns">
+        <button type="button" class="btn" id="bulk-submit" disabled>Submit all rows</button>
+        <span class="sp" id="bulk-stat"></span>
+      </div>
+    </div>
+
+    <!-- ============ RESULT PANELS ============ -->
+    <div class="paper done" id="done">
+      <div class="tick">&#10003;</div>
+      <h2>Thank you, your assessment has been submitted</h2>
+      <p data-email="on">A copy has been sent to your email address. An N1C curator will review the entry and it will appear
+        on the Assessed Variants page once confirmed. You can update or withdraw it at any time by replying to that email.</p>
+      <p data-email="off">Please make a note of your reference number. An N1C curator will review the entry by hand and will
+        contact you if anything is unclear; it appears on the Assessed Variants page once confirmed. To update or withdraw it,
+        email <a href="mailto:generegistry@n1collaborative.org">generegistry@n1collaborative.org</a> quoting the reference.</p>
+      <div class="ref">Your reference: <b id="done-id"></b></div>
+    </div>
+
+    <div class="paper done" id="bulk-done" style="display:none">
+      <div class="tick">&#10003;</div>
+      <h2>Thank you, <span id="bulk-done-count"></span> assessments have been submitted</h2>
+      <p>An N1C curator will review every row by hand and will contact you if anything is unclear. Please keep the
+        reference numbers below; quote them in any email to
+        <a href="mailto:generegistry@n1collaborative.org">generegistry@n1collaborative.org</a>.</p>
+      <div class="ref idlist">References: <b id="bulk-ids"></b></div>
+    </div>
+
+    <div class="paper failed" id="failed">
+      <h2>Your submission could not be sent</h2>
+      <p>Something went wrong on our side, and we did not want you to lose what you typed. Please copy the
+        text below and email it to
+        <a href="mailto:generegistry@n1collaborative.org">generegistry@n1collaborative.org</a>,
+        and we will enter it for you.</p>
+      <textarea id="failed-text" readonly></textarea>
+      <div style="margin-top:12px">
+        <button type="button" class="btn sm" onclick="N1C.copyFallback()">Copy the text</button>
+        <button type="button" class="btn ghost sm" onclick="N1C.backToForm()">Back to the form</button>
+      </div>
+    </div>
+
+    <div class="paper failed" id="bulk-failed" style="display:none">
+      <h2>Your file could not be sent</h2>
+      <p>Something went wrong on our side. Nothing was saved. Please email the file itself to
+        <a href="mailto:generegistry@n1collaborative.org">generegistry@n1collaborative.org</a> with your name,
+        and we will enter the rows for you.</p>
+      <div style="margin-top:12px">
+        <button type="button" class="btn ghost sm" onclick="N1C.bulkBack()">Back to the upload</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="after" id="after">
+    <div class="paper c">
+      <h3>What happens next</h3>
+      <div class="s"><b>1 &middot;</b> Your entry is checked for format before it is sent.</div>
+      <div class="s"><b>2 &middot;</b> An N1C curator reviews it by hand and contacts you if anything is unclear.</div>
+      <div class="s"><b>3 &middot;</b> It appears on Assessed Variants with your group's name at the next update.</div>
+      <div class="s"><b>4 &middot;</b> You can update or withdraw it at any time.</div>
+    </div>
+    <div class="paper c">
+      <h3>Many assessments at once?</h3>
+      <p>Choose "Several assessments" at the top of the page, download the template, fill in one assessment per row and
+        upload the file. Every row is checked and you see a summary before anything is sent.</p>
+      <div style="margin-top:12px"><button type="button" class="btn ghost sm" onclick="N1C.setMode('bulk')">Upload a file instead</button></div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="site-foot"><div class="wrap">
+  <div>&copy; 2026 <b>N=1 Collaborative</b> &middot; Gene Registry</div>
+  <div><a href="mailto:generegistry@n1collaborative.org">generegistry@n1collaborative.org</a></div>
+</div></footer>
+
+<script src="xlsx.full.min.js"></script>
+<script src="n1c_forms.js"></script>
+<script>
+(function () {
+  var $ = N1C.$, val = N1C.val, radio = N1C.radio, put = N1C.put, V = N1C.V, NORM = N1C.NORM;
+
+  function notFuture(v) {
+    if (!V.date(v)) return false;
+    var today = new Date(); today.setHours(23, 59, 59, 999);
+    var d = new Date(v.trim());
+    return isNaN(d.getTime()) ? true : d <= today;
+  }
+
+  /* ---------- step-by-step path ---------- */
+  N1C.initSteps({
+    kind: 'variant',
+    last: 4,
+    rules: {
+      group:   { el: 'f-group', fg: 'fg-group', step: 0, name: 'Submitting group or assessor', t: function (v) { return v.trim().length > 1; },
+                 bad: 'Please give the name of your group.', good: 'This is shown next to the assessment' },
+      email:   { el: 'f-email', fg: 'fg-email', step: 0, name: 'Contact email', t: V.email,
+                 bad: 'Please enter a valid email address, for example j.doe@institution.eu', good: 'Valid email address' },
+      name:    { el: 'f-name', fg: 'fg-name', step: 0, name: 'Your name', t: function (v) { return v.trim().length > 1; },
+                 bad: 'Please give your name.', good: 'Thanks' },
+      disease: { el: 'f-disease', fg: 'fg-disease', step: 1, name: 'Disease', t: function (v) { return v.trim().length > 2; },
+                 bad: 'Please give the disease name.', good: 'Thanks' },
+      mondo:   { el: 'f-mondo', fg: 'fg-mondo', step: 1, name: 'Mondo ID', t: V.mondo,
+                 bad: 'Needs the form MONDO: followed by seven digits, for example MONDO:0033374', good: 'Valid Mondo ID' },
+      gene:    { el: 'f-gene', fg: 'fg-gene', step: 1, name: 'Gene', t: V.gene,
+                 bad: 'Use an HGNC approved symbol with no spaces, for example CYFIP2.', good: 'Recognised symbol format' },
+      pos:     { el: 'f-pos', fg: 'fg-pos', step: 2, name: 'Genomic position', t: V.position,
+                 bad: 'Whole numbers only, for example 157294834', good: 'Valid position' },
+      ghgvs:   { el: 'f-ghgvs', fg: 'fg-ghgvs', step: 2, name: 'Genomic HGVS', t: V.genomicHgvs,
+                 bad: 'Must begin with NC_, a version, then :g. For example NC_000005.10:g.157294834C>T', good: 'Valid genomic HGVS' },
+      ref:     { el: 'f-ref', fg: 'fg-ref', step: 2, name: 'Reference allele', t: V.allele,
+                 bad: 'Only A, C, G, T or -', good: 'OK' },
+      alt:     { el: 'f-alt', fg: 'fg-alt', step: 2, name: 'Alternate allele', t: V.allele,
+                 bad: 'Only A, C, G, T or -', good: 'OK' },
+      tx:      { el: 'f-tx', fg: 'fg-tx', step: 2, name: 'RefSeq transcript', t: V.transcript,
+                 bad: 'Needs a RefSeq accession including the version, for example NM_001037333.3', good: 'Valid RefSeq accession' },
+      cvar:    { el: 'f-cvar', fg: 'fg-cvar', step: 2, name: 'Coding DNA change', t: V.coding,
+                 bad: 'The coding change must begin with c. For example c.259C>T', good: 'Valid HGVS coding change' },
+      pvar:    { el: 'f-pvar', fg: 'fg-pvar', step: 2, name: 'Predicted protein change', t: V.protein,
+                 bad: 'If given, the protein change must begin with p. For example p.Arg87Cys', good: 'Valid HGVS protein change' },
+      clinvar: { el: 'f-clinvar', fg: 'fg-clinvar', step: 2, name: 'ClinVar link', t: V.clinvar,
+                 bad: 'Should be a ClinVar variation page, for example https://www.ncbi.nlm.nih.gov/clinvar/variation/430807', good: 'Valid ClinVar link' },
+      vpub:    { el: 'f-vpub', fg: 'fg-vpub', step: 2, name: 'Variant publication', t: V.url,
+                 bad: 'Please give a full web address starting with https://', good: 'OK' },
+      date:    { el: 'f-date', fg: 'fg-date', step: 3, name: 'Date of assessment', t: notFuture,
+                 bad: 'Please give the date of the assessment (not in the future).', good: 'Thanks' },
+      text:    { el: 'f-text', fg: 'fg-text', step: 3, name: 'Assessment text', t: function (v) { return v.trim().length >= 20; },
+                 bad: 'Please give the reasoning behind the verdict (at least a sentence).', good: 'Thanks' },
+      apub:    { el: 'f-apub', fg: 'fg-apub', step: 3, name: 'Assessment publication', t: V.url,
+                 bad: 'Please give a full web address starting with https://', good: 'OK' }
+    },
+    radios: {
+      consent: { fg: 'fg-consent', step: 0, name: 'Display on the registry (yes or no)' }
+    },
+    selects: {
+      'f-inh':      { fg: 'fg-inh',      step: 1, name: 'Inheritance' },
+      'f-patho':    { fg: 'fg-patho',    step: 1, name: 'Pathomechanism' },
+      'f-chr':      { fg: 'fg-chr',      step: 2, name: 'Chromosome' },
+      'f-splice':   { fg: 'fg-splice',   step: 2, name: 'Splicing effect' },
+      'f-mod':      { fg: 'fg-mod',      step: 3, name: 'Therapeutic modality' },
+      'f-approach': { fg: 'fg-approach', step: 3, name: 'Approach' },
+      'f-elig':     { fg: 'fg-elig',     step: 3, name: 'Eligibility' }
+    },
+    afterCheck: function () {
+      var hg = $('hgvs');
+      if (V.transcript(val('f-tx')) && V.coding(val('f-cvar'))) {
+        var pv = val('f-pvar').trim();
+        $('hgvs-v').textContent = val('f-tx').trim() + '(' + val('f-gene').trim().toUpperCase() + '):' + val('f-cvar').trim() + (pv ? ' (' + pv + ')' : '');
+        hg.style.display = 'block';
+      } else { hg.style.display = 'none'; }
+    },
+    fillReview: function () {
+      put('r-consent', radio('consent') === 'Yes' ? 'Yes, display on the public registry' :
+                       radio('consent') === 'No'  ? 'No, keep on file within the N1C' : '');
+      put('r-group', val('f-group'));
+      put('r-contact', (val('f-name') + ' · ' + val('f-email')).trim());
+      put('r-disease', val('f-disease')); put('r-mondo', NORM.mondo(val('f-mondo'))); put('r-gene', val('f-gene'));
+      put('r-inh', val('f-inh')); put('r-patho', val('f-patho'));
+      put('r-pos', (val('f-chr') ? 'chr' + val('f-chr') + ':' : '') + val('f-pos') +
+                   (val('f-ref') || val('f-alt') ? ' ' + val('f-ref') + '>' + val('f-alt') : ''));
+      put('r-ghgvs', val('f-ghgvs')); put('r-tx', val('f-tx')); put('r-cvar', val('f-cvar')); put('r-pvar', val('f-pvar'));
+      put('r-splice', val('f-splice')); put('r-clinvar', val('f-clinvar'));
+      put('r-date', val('f-date')); put('r-mod', val('f-mod')); put('r-approach', val('f-approach')); put('r-elig', val('f-elig'));
+      var t = val('f-text').trim();
+      put('r-text', t.length > 220 ? t.slice(0, 220) + '…' : t);
+    },
+    payload: function () {
+      return {
+        submitterName:      val('f-name').trim(),
+        submitterEmail:     val('f-email').trim(),
+        submitterGroup:     val('f-group').trim(),
+        displayPublicly:    radio('consent'),
+        dateAssessment:     val('f-date').trim(),
+        disease:            val('f-disease').trim(),
+        mondo:              NORM.mondo(val('f-mondo')),
+        gene:               val('f-gene').trim().toUpperCase(),
+        inheritance:        val('f-inh'),
+        pathomechanism:     val('f-patho'),
+        genomeBuild:        'GRCh38',
+        chromosome:         val('f-chr'),
+        position:           val('f-pos').trim(),
+        refAllele:          val('f-ref').trim().toUpperCase(),
+        altAllele:          val('f-alt').trim().toUpperCase(),
+        genomicHgvs:        val('f-ghgvs').trim(),
+        transcript:         val('f-tx').trim(),
+        codingChange:       val('f-cvar').trim(),
+        proteinChange:      val('f-pvar').trim(),
+        confirmedChange:    val('f-conf').trim(),
+        splicing:           val('f-splice'),
+        clinvar:            val('f-clinvar').trim(),
+        variantPublication: val('f-vpub').trim(),
+        modality:           val('f-mod'),
+        approach:           val('f-approach'),
+        eligibility:        val('f-elig'),
+        assessmentText:     val('f-text').trim(),
+        publication:        val('f-apub').trim()
+      };
+    }
+  });
+
+  $('f-gene').addEventListener('blur', function () { this.value = this.value.trim().toUpperCase(); N1C.check(); });
+  ['f-tx', 'f-cvar', 'f-pvar', 'f-email', 'f-group', 'f-name', 'f-mondo', 'f-ghgvs', 'f-clinvar', 'f-pos'].forEach(function (id) {
+    $(id).addEventListener('blur', function () { this.value = this.value.trim(); N1C.check(); });
+  });
+
+  /* ---------- file-upload path ---------- */
+  N1C.initBulk({
+    kind: 'variant',
+    label: 'assessment',
+    keys: ['gene', 'codingChange', 'genomicHgvs'],
+    previewKeys: ['gene', 'transcript', 'codingChange', 'proteinChange', 'modality', 'approach', 'eligibility', 'submitterGroup'],
+    columns: [
+      { key: 'dateAssessment', label: 'Date assessment', aliases: ['date assessment', 'date of assessment', 'assessment date', 'date'], required: true, check: V.date, checkMsg: 'date should be written as YYYY-MM-DD or DD/MM/YYYY' },
+      { key: 'submitterGroup', label: 'Submitter/Assessor', aliases: ['submitter/assessor', 'submitter / assessor', 'submitting group', 'assessor', 'submitter'], required: true },
+      { key: 'displayPublicly', label: 'Gene Registry?', aliases: ['gene registry?', 'gene registry', 'display on the registry', 'display publicly'], norm: NORM.yesNo },
+      { key: 'mondo', label: 'Mondo', aliases: ['mondo', 'mondo id'], norm: NORM.mondo, check: V.mondo, checkMsg: 'Mondo ID should look like MONDO:0033374' },
+      { key: 'disease', label: 'Disease', aliases: ['disease'], required: true },
+      { key: 'gene', label: 'Gene', aliases: ['gene'], required: true, check: V.gene, checkMsg: 'gene symbol looks wrong',
+        norm: function (v) { return String(v).trim().toUpperCase(); } },
+      { key: 'genomeBuild', label: 'Genome Build', aliases: ['genome build', 'build'], norm: NORM.genomeBuild,
+        check: function (v) { return v === 'GRCh38'; }, checkMsg: 'genome build is not GRCh38; the registry uses GRCh38 only' },
+      { key: 'chromosome', label: 'Chromosome', aliases: ['chromosome', 'chr'], norm: NORM.chromosome, check: V.chromosome, checkMsg: 'chromosome should be 1 to 22, X, Y or MT' },
+      { key: 'position', label: 'Genomic Position', aliases: ['genomic position', 'position'], check: V.position, checkMsg: 'genomic position should be a whole number' },
+      { key: 'refAllele', label: 'Reference Allele', aliases: ['reference allele', 'ref'], norm: function (v) { return String(v).trim().toUpperCase(); }, check: V.allele, checkMsg: 'reference allele should be A, C, G, T or -' },
+      { key: 'altAllele', label: 'Alternate Allele', aliases: ['alternate allele', 'alt'], norm: function (v) { return String(v).trim().toUpperCase(); }, check: V.allele, checkMsg: 'alternate allele should be A, C, G, T or -' },
+      { key: 'genomicHgvs', label: 'Genomic HGVS', aliases: ['genomic hgvs'], check: V.genomicHgvs, checkMsg: 'genomic HGVS should begin with NC_ and contain :g.' },
+      { key: 'transcript', label: 'RefSeq Transcript', aliases: ['refseq transcript', 'transcript'], required: true, check: V.transcript, checkMsg: 'transcript needs a RefSeq accession with a version, for example NM_001037333.3' },
+      { key: 'codingChange', label: 'Coding DNA change (c.)', aliases: ['coding dna change (c.)', 'coding change (c.)', 'coding change', 'coding dna change'], required: true, check: V.coding, checkMsg: 'coding change does not start with c.' },
+      { key: 'proteinChange', label: 'Predicted protein change (p.)', aliases: ['predicted protein change (p.)', 'protein change (p.)', 'protein change', 'predicted protein change'], check: V.protein, checkMsg: 'protein change does not start with p.' },
+      { key: 'confirmedChange', label: 'Confirmed protein or RNA change', aliases: ['confirmed protein or rna change', 'confirmed change'] },
+      { key: 'clinvar', label: 'Clinvar', aliases: ['clinvar', 'clinvar link'], check: V.clinvar, checkMsg: 'ClinVar link should point to a clinvar/variation page' },
+      { key: 'pathomechanism', label: 'Pathomechanism', aliases: ['pathomechanism'], norm: NORM.pathomechanism },
+      { key: 'inheritance', label: 'Inheritance', aliases: ['inheritance'], norm: NORM.inheritance },
+      { key: 'splicing', label: 'Splicing effect?', aliases: ['splicing effect?', 'splicing effect', 'splicing'], norm: NORM.splicing },
+      { key: 'variantPublication', label: 'Variant publication', aliases: ['variant publication'], check: V.url, checkMsg: 'variant publication should be a full web address' },
+      { key: 'modality', label: 'Therapeutic Modality', aliases: ['therapeutic modality', 'modality'], required: true, norm: NORM.modality },
+      { key: 'approach', label: 'Approach', aliases: ['approach'], required: true, norm: NORM.approach },
+      { key: 'eligibility', label: 'Eligibility', aliases: ['eligibility'], required: true, norm: NORM.eligibility },
+      { key: 'publication', label: 'Publication', aliases: ['publication', 'assessment publication'], check: V.url, checkMsg: 'publication should be a full web address' },
+      { key: 'assessmentText', label: 'Assessment text', aliases: ['assessment text', 'assessment'], required: true },
+      { key: 'submitterEmail', label: 'Contact email', aliases: ['contact email (not shown)', 'contact email', 'submitter email', 'email'], check: V.email, checkMsg: 'contact email looks wrong' },
+      { key: 'submitterName', label: 'Contact name', aliases: ['contact name (not shown)', 'contact name', 'submitter name'] }
+    ],
+    derive: function (f, note) {
+      if (!f.displayPublicly) note('no answer in the Gene Registry? column (display on the registry, Yes or No)');
+      if (!f.genomicHgvs && !(f.chromosome && f.position)) note('neither a genomic HGVS nor chromosome and position was given');
+    }
+  });
+})();
+</script>
+</body>
+</html>
